@@ -1,7 +1,5 @@
 package game;
 
-import game.chunk.Chunk;
-import game.item.ItemDefinition;
 import game.player.Player;
 
 import static engine.disk.Disk.createWorldsDir;
