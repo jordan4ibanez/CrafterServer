@@ -1,3 +1,0 @@
-Textures are from:
-Mineclone 2 (https://git.minetest.land/MineClone2/MineClone2)
-Gerold55 (https://github.com/Gerold55/MineClone-2-Textures)
