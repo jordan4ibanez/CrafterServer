@@ -1,15 +1,21 @@
 package game;
 
+import game.item.ItemEntity;
 import game.player.Player;
+import game.tnt.TNTEntity;
 
+import static engine.Time.calculateDelta;
 import static engine.disk.Disk.createWorldsDir;
 import static engine.disk.Disk.savePlayerPos;
 import static engine.disk.SaveQueue.startSaveThread;
-import static engine.scene.SceneHandler.handleSceneLogic;
 import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
-import static game.chunk.Chunk.globalFinalChunkSaveToDisk;
+import static game.chunk.Chunk.*;
+import static game.chunk.ChunkUpdateHandler.chunkUpdater;
+import static game.falling.FallingEntity.fallingEntityOnStep;
+import static game.mob.Mob.mobsOnTick;
 import static game.player.Player.getAllPlayers;
+import static game.player.Player.playersOnTick;
 
 public class Crafter {
 
@@ -32,8 +38,11 @@ public class Crafter {
             initGame();
             createWorldsDir();
             startSaveThread();
-            //this is the scene controller
-            handleSceneLogic();
+
+            System.out.println("REMEMBER TO ADD IN CONTROLS IN THE TERMINAL!");
+            while (true) {
+                gameLoop();
+            }
 
         } catch ( Exception excp ){
             excp.printStackTrace();
@@ -45,6 +54,23 @@ public class Crafter {
                 savePlayerPos(player.name, player.pos);
             }
         }
+    }
+
+    //main game loop
+    private static void gameLoop() throws Exception {
+        calculateDelta();
+        chunkUpdater();
+        globalChunkSaveToDisk();
+        gameUpdate();
+        processOldChunks();
+    }
+
+    private static void gameUpdate() throws Exception {
+        playersOnTick();
+        ItemEntity.onStep();
+        TNTEntity.onTNTStep();
+        fallingEntityOnStep();
+        mobsOnTick();
     }
 
     //the game engine elements
