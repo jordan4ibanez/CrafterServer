@@ -95,9 +95,6 @@ public class Inventory {
                         newDef.woodMiningLevel  != 0 ? newDef.woodMiningLevel  : 1,
                         newDef.leafMiningLevel  != 0 ? newDef.leafMiningLevel  : 1);
             }
-            //update light level
-            wieldInventory.light = light;
-            wieldInventory.rebuildLightMesh(wieldInventory);
 
             updateTimer = 0f;
         }
