@@ -3,12 +3,7 @@ package game.chunk;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static engine.Time.getDelta;
-import static engine.settings.Settings.getSettingsChunkLoad;
 import static game.chunk.Chunk.chunkStackContainsBlock;
-import static game.chunk.Chunk.updateChunkUnloadingSpeed;
-import static game.chunk.ChunkMesh.generateChunkMesh;
-import static game.chunk.ChunkMesh.updateChunkMeshLoadingSpeed;
 
 public class ChunkUpdateHandler {
 
@@ -37,7 +32,7 @@ public class ChunkUpdateHandler {
             if (!chunkStackContainsBlock(thisUpdate.x, thisUpdate.z, thisUpdate.y)) {
                 key = thisUpdate.key;
             } else {
-                generateChunkMesh(thisUpdate.x, thisUpdate.z, thisUpdate.y);
+                System.out.println("SEND DATA");
                 queue.remove(thisUpdate.key);
             }
             if (!key.equals("")) {

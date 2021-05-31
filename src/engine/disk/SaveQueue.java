@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.zip.GZIPOutputStream;
 
-import static engine.Window.windowShouldClose;
+import static game.Crafter.isGameShouldClose;
 
 public class SaveQueue {
 
@@ -32,7 +32,7 @@ public class SaveQueue {
 
             saveQueue = new ArrayDeque<>();
 
-            while(!windowShouldClose()) {
+            while(!isGameShouldClose()) {
                 if (!saveQueue.isEmpty()) {
                     try {
                         thisChunk = saveQueue.pop();

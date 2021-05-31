@@ -10,8 +10,6 @@ import static game.chunk.Chunk.getBlockRotation;
 import static game.collision.CollisionMath.floorPos;
 import static game.collision.CustomAABB.*;
 import static game.collision.CustomBlockBox.*;
-import static game.player.Player.getIfPlayerIsJumping;
-import static game.player.Player.setPlayerInWater;
 
 public class Collision {
     private static float inWater = 0;
@@ -60,36 +58,10 @@ public class Collision {
             }
 
             if (applyCollision) {
-                if (sneaking && !getIfPlayerIsJumping()) {
 
-                    Vector3d oldPos = new Vector3d(pos);
-
-                    onGround = collisionDetect(pos, inertia, width, height);
-
-                    if (onGround){
-                        onGroundLock = true;
-                    }
-
-                    int axisFallingOff = sneakCollisionDetect(pos, inertia, width, height);
-
-                    if (axisFallingOff == 1) {
-                        pos.x = oldPos.x;
-                        inertia.x = 0;
-                    } else if (axisFallingOff == 2) {
-                        pos.z = oldPos.z;
-                        inertia.z = 0;
-                    } else if (axisFallingOff == 3) {
-                        pos.x = oldPos.x;
-                        inertia.x = 0;
-                        pos.z = oldPos.z;
-                        inertia.z = 0;
-                    }
-
-                } else {
-                    onGround = collisionDetect(pos, inertia, width, height);
-                    if (onGround){
-                        onGroundLock = true;
-                    }
+                onGround = collisionDetect(pos, inertia, width, height);
+                if (onGround){
+                    onGroundLock = true;
                 }
 
             } else {
@@ -112,10 +84,6 @@ public class Collision {
 
             if (gravity) {
                 if (inWater > 0.f) {
-                    if (isPlayer) {
-                        setPlayerInWater(true);
-                    }
-
                     //water resistance
                     if (inertia.y > -50f / inWater) {
                         inertia.y -= 1000 / inWater * adjustedDelta;
@@ -124,9 +92,6 @@ public class Collision {
                         inertia.y += 2000 / inWater * adjustedDelta;
                     }
                 } else {
-                    if (isPlayer) {
-                        setPlayerInWater(false);
-                    }
                     //regular gravity
                     inertia.y -= 30f * adjustedDelta;
                 }

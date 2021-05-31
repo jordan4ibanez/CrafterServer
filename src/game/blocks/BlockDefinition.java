@@ -3,9 +3,7 @@ package game.blocks;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-import static engine.sound.SoundAPI.playSound;
 import static game.chunk.Chunk.*;
-import static game.crafting.InventoryLogic.openCraftingInventory;
 import static game.falling.FallingEntity.addFallingEntity;
 import static game.item.ItemDefinition.registerItem;
 import static game.item.ItemEntity.createItem;
@@ -127,9 +125,6 @@ public class BlockDefinition {
                     e.printStackTrace();
                 }
             }
-            if (!blockIDs[ID].digSound.equals("")) {
-                playSound(blockIDs[ID].digSound);
-            }
         }
     }
 
@@ -140,10 +135,6 @@ public class BlockDefinition {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        if (!blockIDs[ID].placeSound.equals("")) {
-            playSound(blockIDs[ID].placeSound);
         }
     }
 
@@ -937,7 +928,6 @@ public class BlockDefinition {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
                             setBlock((int)pos.x, (int)pos.y, (int)pos.z, 23,rot);
                             setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, 24,rot);
-                            playSound("door_close", new Vector3d(pos.x + 0.5d, pos.y + 0.5d, pos.z + 0.5d));
                         }
                     }
                 },
@@ -984,7 +974,6 @@ public class BlockDefinition {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
                             setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, 23,rot);
                             setBlock((int)pos.x, (int)pos.y, (int)pos.z, 24,rot);
-                            playSound("door_close", new Vector3d(pos.x + 0.5d, pos.y + 0.5d, pos.z + 0.5d));
                         }
                     }
                 },
@@ -1039,7 +1028,6 @@ public class BlockDefinition {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
                             setBlock((int)pos.x, (int)pos.y, (int)pos.z, 21,rot);
                             setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, 22,rot);
-                            playSound("door_open", new Vector3d(pos.x + 0.5d, pos.y + 0.5d, pos.z + 0.5d));
                         }
                     }
                 },
@@ -1086,7 +1074,6 @@ public class BlockDefinition {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
                             setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, 21,rot);
                             setBlock((int)pos.x, (int)pos.y, (int)pos.z, 22,rot);
-                            playSound("door_open", new Vector3d(pos.x + 0.5d, pos.y + 0.5d, pos.z + 0.5d));
                         }
                     }
                 },
@@ -1187,7 +1174,6 @@ public class BlockDefinition {
             @Override
             public void onRightClick(Vector3d pos) {
                 //BlockModifier.super.onRightClick(pos);
-                openCraftingInventory(true);
             }
         };
 

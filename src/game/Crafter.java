@@ -11,7 +11,6 @@ import static engine.scene.SceneHandler.handleSceneLogic;
 import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.globalFinalChunkSaveToDisk;
-import static game.crafting.CraftRecipes.registerCraftRecipes;
 import static game.player.Player.getAllPlayers;
 
 public class Crafter {
@@ -21,6 +20,12 @@ public class Crafter {
 
     public static String getVersionName(){
         return versionName;
+    }
+
+    private static boolean gameShouldClose = false;
+
+    public static boolean isGameShouldClose(){
+        return gameShouldClose;
     }
 
     //core game engine elements
@@ -50,6 +55,5 @@ public class Crafter {
     public static void initGame() throws Exception{
         //this initializes the block definitions
         initializeBlocks();
-        registerCraftRecipes();
     }
 }
