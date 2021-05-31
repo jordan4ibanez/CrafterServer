@@ -12,7 +12,6 @@ import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.globalFinalChunkSaveToDisk;
 import static game.crafting.CraftRecipes.registerCraftRecipes;
 import static game.player.Player.getPlayerPos;
-import static game.tnt.TNTEntity.createTNTEntityMesh;
 
 public class Crafter {
 
@@ -48,8 +47,6 @@ public class Crafter {
     public static void initGame() throws Exception{
         //this initializes the block definitions
         initializeBlocks();
-        //this creates a TNT mesh (here for now)
-        createTNTEntityMesh();
         registerCraftRecipes();
     }
 

@@ -4,7 +4,6 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import static engine.Time.getDelta;
-import static engine.sound.SoundAPI.playSound;
 import static game.mob.Human.registerHumanMob;
 import static game.mob.Pig.registerPigMob;
 
@@ -92,7 +91,6 @@ public class Mob {
         if (thisMob.hurtTimer <= 0 && thisMob.health > 0) {
             thisMob.health -= 1;
             System.out.println("the mobs health is: " + thisMob.health);
-            playSound(thisMob.hurtSound, new Vector3f((float)thisMob.pos.x, (float)thisMob.pos.y, (float)thisMob.pos.z), true);
             if (thisMob.onGround) {
                 thisMob.inertia.y = 7;
             }

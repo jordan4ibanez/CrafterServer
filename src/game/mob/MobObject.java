@@ -1,6 +1,5 @@
 package game.mob;
 
-import engine.graphics.Mesh;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -14,10 +13,6 @@ public class MobObject {
     public final float width;
     public final float height;
     public float rotation;
-    public float smoothRotation;
-    public final Vector3f[] bodyOffsets;
-    public Vector3f[] bodyRotations;
-    public final Mesh[] meshes;
     public final int ID;
 
     public float animationTimer;
@@ -48,12 +43,6 @@ public class MobObject {
         this.width = getMobDefinition(ID).width;
 
         this.rotation = (float)(Math.toDegrees(Math.PI * Math.random() * randomDirFloat()));
-        this.smoothRotation = 0f;
-
-        this.bodyOffsets = getMobDefinition(ID).bodyOffsets.clone();
-        this.bodyRotations = getMobDefinition(ID).bodyRotations.clone();
-        this.meshes = getMobDefinition(ID).bodyMeshes.clone();
-
         this.ID = ID;
 
         this.globalID = globalID;
