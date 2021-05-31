@@ -1,7 +1,5 @@
 package game.chunk;
 
-import engine.graphics.Mesh;
-
 public class ChunkObject {
     public String ID;
 
@@ -14,10 +12,6 @@ public class ChunkObject {
     public byte[] rotation = new byte[128 * 16 * 16];
     public byte[] light = new byte[128 * 16 * 16];
     public byte[][] heightMap  = new byte[16][16];
-
-    public Mesh[] normalMesh = new Mesh[8];
-    public Mesh[] liquidMesh = new Mesh[8];
-    public Mesh[] allFacesMesh = new Mesh[8];
 
     public boolean modified = false;
 

@@ -171,13 +171,13 @@ public class Disk {
         return(abstractedChunk);
     }
 
-    public static void savePlayerPos(Vector3d pos){
+    public static void savePlayerPos(String name, Vector3d pos){
         SpecialSavingVector3d tempPos = new SpecialSavingVector3d();
         tempPos.x = pos.x;
         tempPos.y = pos.y;
         tempPos.z = pos.z;
         try {
-            objectMapper.writeValue(new File("Worlds/world" + currentActiveWorld + "/playerPos.data"), tempPos);
+            objectMapper.writeValue(new File("Worlds/world" + currentActiveWorld + "/" + name + "Pos.data"), tempPos);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,10 +1,6 @@
 package engine.settings;
-
-import static engine.Window.setVSync;
 import static engine.disk.Disk.loadSettingsFromDisk;
 import static engine.disk.Disk.saveSettingsToDisk;
-import static game.chunk.Chunk.generateNewChunks;
-import static game.chunk.ChunkUpdateHandler.updateChunkLoadingSpeed;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Settings {
@@ -100,45 +96,7 @@ public class Settings {
         }
     }
 
-    //debug info
-    public static boolean getDebugInfo(){
-        return debugInfo;
-    }
-    public static void setDebugInfo(boolean truth){
-        debugInfo = truth;
-    }
-    public static void invertDebugInfoBoolean(){ //todo: remove this crap
-        debugInfo = !debugInfo;
-    }
 
-    //render distance
-    public static int getRenderDistance(){
-        return renderDistance;
-    }
-    public static void setRenderDistance(int newRenderDistance, boolean inGame){
-        renderDistance = newRenderDistance;
-        settings.renderDistance = newRenderDistance;
-        if (inGame) {
-            generateNewChunks();
-        }
-    }
-
-    //vsync
-    public static void setSettingsVsync(boolean truth){
-        vSync = truth;
-        settings.vSync = truth;
-        setVSync(truth);
-    }
-    public static boolean getSettingsVsync(){
-        return vSync;
-    }
-
-    //lazy chunk loading
-    public static void setSettingsChunkLoad(byte truth){
-        chunkLoading = truth;
-        settings.chunkLoading = truth;
-        updateChunkLoadingSpeed();
-    }
     public static byte getSettingsChunkLoad(){
         return chunkLoading;
     }

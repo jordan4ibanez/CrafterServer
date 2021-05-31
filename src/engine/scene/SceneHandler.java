@@ -4,15 +4,11 @@ import game.item.ItemEntity;
 import game.tnt.TNTEntity;
 
 import static engine.Time.calculateDelta;
-import static engine.gui.GUILogic.pauseMenuOnTick;
 import static game.chunk.Chunk.globalChunkSaveToDisk;
 import static game.chunk.Chunk.processOldChunks;
-import static game.chunk.ChunkMesh.popChunkMeshQueue;
 import static game.chunk.ChunkUpdateHandler.chunkUpdater;
-import static game.crafting.InventoryLogic.inventoryMenuOnTick;
 import static game.falling.FallingEntity.fallingEntityOnStep;
 import static game.mob.Mob.mobsOnTick;
-import static game.particle.Particle.particlesOnStep;
 import static game.player.Player.*;
 
 public class SceneHandler {
@@ -29,8 +25,6 @@ public class SceneHandler {
     //main game loop
     private static void gameLoop() throws Exception {
         calculateDelta();
-        updateWorldChunkLoader();
-        popChunkMeshQueue(); //this actually transmits the data from the other threads into main thread
         chunkUpdater();
         globalChunkSaveToDisk();
         gameUpdate();
@@ -38,13 +32,9 @@ public class SceneHandler {
     }
 
     private static void gameUpdate() throws Exception {
-        testPlayerDiggingAnimation();
-        playerOnTick();
+        playersOnTick();
         ItemEntity.onStep();
         TNTEntity.onTNTStep();
-        pauseMenuOnTick();
-        inventoryMenuOnTick();
-        particlesOnStep();
         fallingEntityOnStep();
         mobsOnTick();
     }

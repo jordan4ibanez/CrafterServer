@@ -2,6 +2,7 @@ package game;
 
 import game.chunk.Chunk;
 import game.item.ItemDefinition;
+import game.player.Player;
 
 import static engine.disk.Disk.createWorldsDir;
 import static engine.disk.Disk.savePlayerPos;
@@ -11,7 +12,7 @@ import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.globalFinalChunkSaveToDisk;
 import static game.crafting.CraftRecipes.registerCraftRecipes;
-import static game.player.Player.getPlayerPos;
+import static game.player.Player.getAllPlayers;
 
 public class Crafter {
 
@@ -38,8 +39,10 @@ public class Crafter {
             System.exit(-1);
         } finally {
             globalFinalChunkSaveToDisk();
-            savePlayerPos(getPlayerPos());
-            cleanup();
+            for (Object thisPlayer : getAllPlayers()){
+                Player player = (Player)thisPlayer;
+                savePlayerPos(player.name, player.pos);
+            }
         }
     }
 
@@ -48,11 +51,5 @@ public class Crafter {
         //this initializes the block definitions
         initializeBlocks();
         registerCraftRecipes();
-    }
-
-
-    private static void cleanup(){
-        Chunk.cleanUp();
-        ItemDefinition.cleanUp();
     }
 }
