@@ -4,7 +4,6 @@ import game.item.ItemEntity;
 import game.tnt.TNTEntity;
 
 import static engine.Time.calculateDelta;
-import static engine.Window.windowShouldClose;
 import static engine.gui.GUILogic.pauseMenuOnTick;
 import static game.chunk.Chunk.globalChunkSaveToDisk;
 import static game.chunk.Chunk.processOldChunks;
@@ -20,7 +19,8 @@ public class SceneHandler {
 
     public static void handleSceneLogic() throws Exception {
 
-        while (!windowShouldClose()) {
+        System.out.println("REMEMBER TO ADD IN CONTROLS IN THE TERMINAL!");
+        while (true) {
             gameLoop();
         }
 
