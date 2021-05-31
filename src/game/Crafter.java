@@ -22,10 +22,8 @@ public class Crafter {
         return versionName;
     }
 
-    private static boolean gameShouldClose = false;
-
     public static boolean isGameShouldClose(){
-        return gameShouldClose;
+        return false;
     }
 
     //core game engine elements
@@ -52,7 +50,7 @@ public class Crafter {
     }
 
     //the game engine elements
-    public static void initGame() throws Exception{
+    public static void initGame() {
         //this initializes the block definitions
         initializeBlocks();
     }
