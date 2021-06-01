@@ -53,9 +53,8 @@ public class Crafter {
             System.exit(-1);
         } finally {
             globalFinalChunkSaveToDisk();
-            for (Object thisPlayer : getAllPlayers()){
-                Player player = (Player)thisPlayer;
-                savePlayerPos(player.name, player.pos);
+            for (Player thisPlayer : getAllPlayers()){
+                savePlayerPos(thisPlayer.name, thisPlayer.pos);
             }
         }
     }

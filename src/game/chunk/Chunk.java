@@ -61,12 +61,10 @@ public class Chunk {
         saveTimer += getDelta();
         //save interval is 3 seconds
         if (saveTimer >= 3f){
-            for (Object thisPlayer : getAllPlayers()){
-
-                Player player = (Player)thisPlayer;
+            for (Player thisPlayer : getAllPlayers()){
 
                 updateWorldsPathToAvoidCrash();
-                savePlayerPos(player.name, player.pos);
+                savePlayerPos(thisPlayer.name, thisPlayer.pos);
                 for (ChunkObject thisChunk : map.values()){
                     if (thisChunk.modified) {
                         saveChunk(thisChunk);

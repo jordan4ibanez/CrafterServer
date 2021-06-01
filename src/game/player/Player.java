@@ -15,7 +15,7 @@ public class Player {
 
     private static final List<Player> players = new ArrayList<Player>();
 
-    public static List getAllPlayers(){
+    public static List<Player> getAllPlayers(){
         return players;
     }
 

@@ -60,16 +60,15 @@ public class ItemEntity {
 
             //collect items after 3 seconds
             if (thisItem.timer > 3f){
-                for (Object player : getAllPlayers()) {
-                    Player thisPlayer = (Player) player;
+                for (Player player : getAllPlayers()) {
 
-                    if (getDistance(thisItem.pos, thisPlayer.pos) < 3f) {
+                    if (getDistance(thisItem.pos, player.pos) < 3f) {
                         if (!thisItem.collecting) {
                             thisItem.collecting = true;
                             thisItem.collectionTimer = 0.1f;
                         }
                         //do not do else-if here, can go straight to this logic
-                        Vector3d normalizedPos = new Vector3d(thisPlayer.pos.add(0,thisPlayer.collectionHeight,0));
+                        Vector3d normalizedPos = new Vector3d(player.pos.add(0, player.collectionHeight,0));
                         normalizedPos.sub(thisItem.pos).normalize().mul(15f);
 
                         Vector3f normalizedDirection = new Vector3f();
@@ -80,7 +79,7 @@ public class ItemEntity {
                         thisItem.inertia = normalizedDirection;
                     }
 
-                    if (getDistance(thisItem.pos, new Vector3d(thisPlayer.pos.add(0,thisPlayer.collectionHeight,0))) < 0.2f || thisItem.deletionOkay) {
+                    if (getDistance(thisItem.pos, new Vector3d(player.pos.add(0, player.collectionHeight,0))) < 0.2f || thisItem.deletionOkay) {
                         deletionQueue.add(thisItem.ID);
                     }
                 }

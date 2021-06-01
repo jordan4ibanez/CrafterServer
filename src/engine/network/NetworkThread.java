@@ -11,6 +11,14 @@ public class NetworkThread {
 
     private static final int port = 30_150; //minetest, why not
 
+    //if players send garbage data, break connection, destroy player object
+
+    /*
+    data chart: (base 1 like LUA - 0 reserved for null data)
+    1 - handshake, check username
+    2 - position for players object (JACKSON CONVERSION)
+     */
+
     public static void startNetworkThread() {
         new Thread(() -> {
 
@@ -54,7 +62,9 @@ public class NetworkThread {
                     }
 
                     switch (messageType) {
-                        case 1 -> // Type A
+
+                        //handshake
+                        case 1 ->
                                 {
                                     try {
                                         System.out.println("Message A: " + dataInputStream.readUTF());
@@ -62,7 +72,8 @@ public class NetworkThread {
                                         e.printStackTrace();
                                     }
                                 }
-                        case 2 -> // Type B
+                        //player position
+                        case 2 ->
                                 {
                                     try {
                                         System.out.println("Message B: " + dataInputStream.readUTF());
@@ -70,18 +81,6 @@ public class NetworkThread {
                                         e.printStackTrace();
                                     }
                                 }
-                        case 3 -> { // Type C
-                            try {
-                                System.out.println("Message C [1]: " + dataInputStream.readUTF());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                System.out.println("Message C [2]: " + dataInputStream.readUTF());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
                         default -> readingData = false;
                     }
                 }
