@@ -91,7 +91,7 @@ public class NetworkOutput {
         DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 
         try {
-            dataOutputStream.writeByte(1);
+            dataOutputStream.writeByte(3);
         } catch (IOException e) {
             e.printStackTrace();
         }
