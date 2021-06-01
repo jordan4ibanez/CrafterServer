@@ -1,13 +1,14 @@
 package engine.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import engine.disk.ChunkSavingObject;
 import game.chunk.ChunkObject;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import static engine.network.NetworkThread.getGameOutputPort;
 
@@ -73,7 +74,8 @@ public class NetworkOutput {
             try {
                 socket = new Socket(ip.getHostAddress(), getGameOutputPort());
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                return;
             }
         }
 
@@ -81,10 +83,10 @@ public class NetworkOutput {
 
         {
             try {
-                assert socket != null;
                 outputStream = socket.getOutputStream();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                return;
             }
         }
 
@@ -93,11 +95,32 @@ public class NetworkOutput {
         try {
             dataOutputStream.writeByte(3);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            return;
         }
         try {
-            String stringedChunk = objectMapper.writeValueAsString(thisChunk);
-            dataOutputStream.writeUTF(stringedChunk);
+
+            ChunkSavingObject savingObject = new ChunkSavingObject();
+
+            savingObject.I = thisChunk.ID;
+            savingObject.x = thisChunk.x;
+            savingObject.z = thisChunk.z;
+            savingObject.b = thisChunk.block;
+            savingObject.r = thisChunk.rotation;
+            savingObject.l = thisChunk.light;
+            savingObject.h = thisChunk.heightMap;
+            savingObject.e = thisChunk.lightLevel;
+
+            String stringedChunk = objectMapper.writeValueAsString(savingObject);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOut = new GZIPOutputStream(baos);
+            ObjectOutputStream objectOut = new ObjectOutputStream(gzipOut);
+            objectOut.writeObject(stringedChunk);
+            objectOut.close();
+            byte[] bytes = baos.toByteArray();
+            dataOutputStream.write(bytes);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

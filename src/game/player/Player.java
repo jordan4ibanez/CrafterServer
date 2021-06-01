@@ -53,9 +53,11 @@ public class Player {
             if (thisPlayer.chunkLoadingQueue.size() > 0){
                 String thisQueue = thisPlayer.chunkLoadingQueue.get(0);
 
-                String xString = thisQueue.replaceAll(" .*", "");
+                thisPlayer.chunkLoadingQueue.add(thisQueue);
+                String backupString = new String(thisQueue);
+                String xString = thisQueue.split(" ")[0];
                 int x = Integer.parseInt(xString);
-                String zString = thisQueue.split("\\s*")[1];
+                String zString = backupString.split(" ")[1];
                 int z = Integer.parseInt(zString);
 
                 ChunkObject thisChunk = getChunk(x,z);

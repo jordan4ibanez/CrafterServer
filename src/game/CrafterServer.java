@@ -5,8 +5,7 @@ import game.player.Player;
 import game.tnt.TNTEntity;
 
 import static engine.Time.calculateDelta;
-import static engine.disk.Disk.createWorldsDir;
-import static engine.disk.Disk.savePlayerPos;
+import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.startSaveThread;
 import static engine.network.NetworkThread.startNetworkThread;
 import static engine.settings.Settings.loadSettings;
@@ -41,6 +40,7 @@ public class CrafterServer {
             loadSettings();
             initGame();
             createWorldsDir();
+            updateWorldsPathToAvoidCrash();
             startSaveThread();
             startNetworkThread();
             System.out.println("SERVER IS RUNNING!");

@@ -129,9 +129,10 @@ public class NetworkThread {
                                     Player thisPlayer = getPlayerByInet(inetAddress);
                                     if (thisPlayer != null) {
                                         thisPlayer.chunkLoadingQueue.add(chunkRequest);
-                                        String xString = chunkRequest.replaceAll(" .*", "");
+                                        String backupString = new String(chunkRequest);
+                                        String xString = chunkRequest.split(" ")[0];
                                         int x = Integer.parseInt(xString);
-                                        String zString = chunkRequest.split("\\s*")[1];
+                                        String zString = backupString.split(" ")[1];
                                         int z = Integer.parseInt(zString);
                                         genBiome(x, z);
                                     }
