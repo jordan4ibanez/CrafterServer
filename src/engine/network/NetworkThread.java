@@ -6,9 +6,11 @@ import game.player.Player;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static engine.network.NetworkOutput.sendOutHandshake;
 import static game.CrafterServer.isGameShouldClose;
 import static game.player.Player.getPlayer;
 import static game.player.Player.playerExists;
@@ -16,6 +18,10 @@ import static game.player.Player.playerExists;
 public class NetworkThread {
 
     private static final int port = 30_150; //minetest, why not
+
+    public static int getGamePort(){
+        return port;
+    }
 
     //if players send garbage data, break connection, destroy player object
 
@@ -60,6 +66,7 @@ public class NetworkThread {
                 }
 
 
+                InetAddress inetAddress = socket.getInetAddress();
 
                 boolean readingData = true;
                 while (readingData) {
@@ -78,11 +85,11 @@ public class NetworkThread {
                                 {
                                     try {
                                         String playerHandshakeName = dataInputStream.readUTF();
-                                        System.out.println("RECIEVED PLAYER HANDSHAKE!");
                                         if (!playerExists(playerHandshakeName)){
-                                            System.out.println("player can connect!");
+                                            sendOutHandshake(inetAddress, playerHandshakeName);
+                                            System.out.println("ADD PLAYER TO INET ADDRESSES");
                                         } else {
-                                            System.out.println("reject player!");
+                                            sendOutHandshake(inetAddress, "KILL");
                                         }
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -111,13 +118,13 @@ public class NetworkThread {
                 }
 
                 try {
-                    socket.close();
+                    server.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 try {
-                    server.close();
+                    socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
