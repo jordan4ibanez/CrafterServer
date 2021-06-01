@@ -94,7 +94,7 @@ public class NetworkThread {
                                     String playerHandshakeName = dataInputStream.readUTF();
                                     if (!playerExists(playerHandshakeName)) {
                                         sendOutHandshake(inetAddress, playerHandshakeName);
-                                        System.out.println("ADD PLAYER TO INET ADDRESSES");
+                                        System.out.println(playerHandshakeName + " has tried to connect");
                                     } else {
                                         sendOutHandshake(inetAddress, "KILL");
                                     }
