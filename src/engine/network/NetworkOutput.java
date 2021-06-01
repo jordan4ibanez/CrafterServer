@@ -6,19 +6,19 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import static engine.network.NetworkThread.getGamePort;
+import static engine.network.NetworkThread.getGameOutputPort;
 
 public class NetworkOutput {
     public static void sendOutHandshake(InetAddress ip, String playerHandshakeName) {
         Socket socket = null;
         {
             try {
-                socket = new Socket(ip.getHostAddress(), getGamePort());
+                socket = new Socket(ip.getHostAddress(), getGameOutputPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        
+
         OutputStream outputStream = null;
 
         {
