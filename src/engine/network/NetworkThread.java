@@ -64,7 +64,7 @@ public class NetworkThread {
                         continue;
                     }
 
-                    DataInputStream dataInputStream = null;
+                    DataInputStream dataInputStream;
 
                     try {
                         assert socket != null;
@@ -74,14 +74,12 @@ public class NetworkThread {
                         //e.printStackTrace();
                     }
 
-
                     InetAddress inetAddress = socket.getInetAddress();
 
                     boolean readingData = true;
                     while (readingData) {
-                        byte messageType = 0;
+                        byte messageType;
                         try {
-                            assert dataInputStream != null;
                             messageType = dataInputStream.readByte();
                         } catch (IOException e) {
                             //e.printStackTrace();
