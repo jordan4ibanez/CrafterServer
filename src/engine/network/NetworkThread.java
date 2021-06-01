@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 import static engine.network.NetworkOutput.sendOutHandshake;
 import static game.CrafterServer.isGameShouldClose;
@@ -115,6 +116,15 @@ public class NetworkThread {
                                             player.pos.z = newPosition.z;
                                         }
                                     }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            case 3 -> {
+                                try {
+                                    String chunkRequest = dataInputStream.readUTF(); //String
+                                    //Vector3dn newPosition = objectMapper.readValue(position, Vector3dn.class);
+                                    System.out.println(Arrays.toString(inetAddress.getAddress()) + " has requested chunks: " + chunkRequest);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
