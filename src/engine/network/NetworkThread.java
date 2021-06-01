@@ -9,9 +9,10 @@ import static game.Crafter.isGameShouldClose;
 
 public class NetworkThread {
 
+    private static final int port = 30_000; //minetest, why not
+
     public static void startNetworkThread() {
         new Thread(() -> {
-            
 
             while (!isGameShouldClose()) {
 
@@ -19,7 +20,7 @@ public class NetworkThread {
                 Socket socket = null;
 
                 try {
-                    server = new ServerSocket(30000);
+                    server = new ServerSocket(port);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
