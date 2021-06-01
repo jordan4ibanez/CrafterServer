@@ -44,6 +44,7 @@ public class CrafterServer {
             createWorldsDir();
             startSaveThread();
             startNetworkThread();
+            System.out.println("SERVER IS RUNNING!");
             while (true) {
                 gameLoop();
             }
@@ -56,6 +57,7 @@ public class CrafterServer {
             for (Player thisPlayer : getAllPlayers()){
                 savePlayerPos(thisPlayer.name, thisPlayer.pos);
             }
+            System.out.println("SERVER HAS STOPPED!");
         }
     }
 

@@ -78,6 +78,7 @@ public class NetworkThread {
                                 {
                                     try {
                                         String playerHandshakeName = dataInputStream.readUTF();
+                                        System.out.println("RECIEVED PLAYER HANDSHAKE!");
                                         if (!playerExists(playerHandshakeName)){
                                             System.out.println("player can connect!");
                                         } else {
