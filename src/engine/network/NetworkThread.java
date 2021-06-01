@@ -9,7 +9,7 @@ import static game.Crafter.isGameShouldClose;
 
 public class NetworkThread {
 
-    private static final int port = 30_000; //minetest, why not
+    private static final int port = 30_150; //minetest, why not
 
     public static void startNetworkThread() {
         new Thread(() -> {
