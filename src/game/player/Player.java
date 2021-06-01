@@ -3,6 +3,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Player {
     }
 
     public int health = 20;
+    InetAddress inetAddress;
     public int renderDistance = 5;
     public Vector3d pos                  = loadPlayerPos();
     public final float eyeHeight         = 1.5f;
