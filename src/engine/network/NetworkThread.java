@@ -1,7 +1,7 @@
 package engine.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import engine.Vector3fn;
+import engine.Vector3dn;
 import game.player.Player;
 
 import java.io.DataInputStream;
@@ -91,7 +91,7 @@ public class NetworkThread {
                                 {
                                     try {
                                         String position =  dataInputStream.readUTF(); //vector 3fn
-                                        Vector3fn newPosition = objectMapper.readValue(position, Vector3fn.class);
+                                        Vector3dn newPosition = objectMapper.readValue(position, Vector3dn.class);
                                         if (newPosition != null){
                                             Player player = getPlayer(newPosition.name);
                                             if (player != null){
