@@ -1,4 +1,6 @@
 package game.player;
+import game.chunk.Chunk;
+import game.chunk.ChunkObject;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -9,6 +11,7 @@ import java.util.List;
 
 import static engine.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
+import static engine.network.NetworkOutput.sendPlayerChunkData;
 import static game.chunk.Chunk.*;
 
 
@@ -18,6 +21,52 @@ public class Player {
 
     public static List<Player> getAllPlayers(){
         return players;
+    }
+
+    public static void addPlayer(String name, InetAddress inetAddress){
+        Player thisPlayer = new Player();
+        thisPlayer.name = name;
+        thisPlayer.inetAddress = inetAddress;
+        players.add(thisPlayer);
+    }
+
+    public static Player getPlayerByInet(InetAddress inetAddress){
+        for (Player thisPlayer : players){
+            if (thisPlayer.inetAddress.equals(inetAddress)){
+                return thisPlayer;
+            }
+        }
+        return null;
+    }
+
+    public static Player getPlayerByName(String name){
+        for (Player thisPlayer : players){
+            if (thisPlayer.name.equals(name)){
+                return thisPlayer;
+            }
+        }
+        return null;
+    }
+
+    public static void indexAndLoadQueuedChunksForEachPlayer(){
+        for (Player thisPlayer : players){
+            if (thisPlayer.chunkLoadingQueue.size() > 0){
+                String thisQueue = thisPlayer.chunkLoadingQueue.get(0);
+
+                String xString = thisQueue.replaceAll(" .*", "");
+                int x = Integer.parseInt(xString);
+                String zString = thisQueue.split("\\s*")[1];
+                int z = Integer.parseInt(zString);
+
+                ChunkObject thisChunk = getChunk(x,z);
+                if (thisChunk != null){
+                    sendPlayerChunkData(thisPlayer.inetAddress, thisChunk);
+                    thisPlayer.chunkLoadingQueue.remove(0);
+                } else {
+                    genBiome(x, z);
+                }
+            }
+        }
     }
 
     public int health = 20;
@@ -47,6 +96,7 @@ public class Player {
     public Vector3i oldPos = new Vector3i(0,0,0);
     public Vector3d oldRealPos = new Vector3d(0,0,0);
 
+    public List<String> chunkLoadingQueue = new ArrayList<>();
 
     public Vector3d camPos = new Vector3d();
 

@@ -13,8 +13,8 @@ import java.util.Arrays;
 
 import static engine.network.NetworkOutput.sendOutHandshake;
 import static game.CrafterServer.isGameShouldClose;
-import static game.player.Player.getPlayer;
-import static game.player.Player.playerExists;
+import static game.chunk.Chunk.genBiome;
+import static game.player.Player.*;
 
 public class NetworkThread {
 
@@ -95,7 +95,8 @@ public class NetworkThread {
                                     String playerHandshakeName = dataInputStream.readUTF();
                                     if (!playerExists(playerHandshakeName)) {
                                         sendOutHandshake(inetAddress, playerHandshakeName);
-                                        System.out.println(playerHandshakeName + " has tried to connect");
+                                        System.out.println(playerHandshakeName + " has connected");
+                                        addPlayer(playerHandshakeName,inetAddress);
                                     } else {
                                         sendOutHandshake(inetAddress, "KILL");
                                     }
@@ -125,6 +126,15 @@ public class NetworkThread {
                                     String chunkRequest = dataInputStream.readUTF(); //String
                                     //Vector3dn newPosition = objectMapper.readValue(position, Vector3dn.class);
                                     System.out.println(Arrays.toString(inetAddress.getAddress()) + " has requested chunks: " + chunkRequest);
+                                    Player thisPlayer = getPlayerByInet(inetAddress);
+                                    if (thisPlayer != null) {
+                                        thisPlayer.chunkLoadingQueue.add(chunkRequest);
+                                        String xString = chunkRequest.replaceAll(" .*", "");
+                                        int x = Integer.parseInt(xString);
+                                        String zString = chunkRequest.split("\\s*")[1];
+                                        int z = Integer.parseInt(zString);
+                                        genBiome(x, z);
+                                    }
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

@@ -15,8 +15,7 @@ import static game.chunk.Chunk.*;
 import static game.chunk.ChunkUpdateHandler.chunkUpdater;
 import static game.falling.FallingEntity.fallingEntityOnStep;
 import static game.mob.Mob.mobsOnTick;
-import static game.player.Player.getAllPlayers;
-import static game.player.Player.playersOnTick;
+import static game.player.Player.*;
 
 public class CrafterServer {
 
@@ -68,6 +67,7 @@ public class CrafterServer {
         globalChunkSaveToDisk();
         gameUpdate();
         processOldChunks();
+        indexAndLoadQueuedChunksForEachPlayer();
     }
 
     private static void gameUpdate() throws Exception {
