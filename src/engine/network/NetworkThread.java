@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static game.Crafter.isGameShouldClose;
+import static game.CrafterServer.isGameShouldClose;
 import static game.player.Player.getPlayer;
 import static game.player.Player.playerExists;
 
@@ -23,6 +23,7 @@ public class NetworkThread {
     data chart: (base 1 like LUA - 0 reserved for null data)
     1 - handshake, check username
     2 - position for players object (JACKSON CONVERSION)
+    3 - requested chunk data
      */
 
     public static void startNetworkThread() {

@@ -18,7 +18,7 @@ import static game.mob.Mob.mobsOnTick;
 import static game.player.Player.getAllPlayers;
 import static game.player.Player.playersOnTick;
 
-public class Crafter {
+public class CrafterServer {
 
 
 

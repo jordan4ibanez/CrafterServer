@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.zip.GZIPOutputStream;
 
-import static game.Crafter.isGameShouldClose;
+import static game.CrafterServer.isGameShouldClose;
 
 public class SaveQueue {
 
