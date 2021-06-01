@@ -8,6 +8,7 @@ import static engine.Time.calculateDelta;
 import static engine.disk.Disk.createWorldsDir;
 import static engine.disk.Disk.savePlayerPos;
 import static engine.disk.SaveQueue.startSaveThread;
+import static engine.network.NetworkThread.startNetworkThread;
 import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.*;
@@ -18,6 +19,10 @@ import static game.player.Player.getAllPlayers;
 import static game.player.Player.playersOnTick;
 
 public class Crafter {
+
+
+
+    boolean done = false;
 
     //fields
     private static final String versionName = "Crafter 0.04a Survival Test";
@@ -38,8 +43,7 @@ public class Crafter {
             initGame();
             createWorldsDir();
             startSaveThread();
-
-            System.out.println("REMEMBER TO ADD IN CONTROLS IN THE TERMINAL!");
+            startNetworkThread();
             while (true) {
                 gameLoop();
             }
