@@ -1,11 +1,17 @@
 package engine.network;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import engine.Vector3fn;
+import game.player.Player;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import static game.Crafter.isGameShouldClose;
+import static game.player.Player.getPlayer;
+import static game.player.Player.playerExists;
 
 public class NetworkThread {
 
@@ -21,6 +27,9 @@ public class NetworkThread {
 
     public static void startNetworkThread() {
         new Thread(() -> {
+
+            //used for raw data conversion
+            final ObjectMapper objectMapper = new ObjectMapper();
 
             while (!isGameShouldClose()) {
 
@@ -67,7 +76,12 @@ public class NetworkThread {
                         case 1 ->
                                 {
                                     try {
-                                        System.out.println("Message A: " + dataInputStream.readUTF());
+                                        String playerHandshakeName = dataInputStream.readUTF();
+                                        if (!playerExists(playerHandshakeName)){
+                                            System.out.println("player can connect!");
+                                        } else {
+                                            System.out.println("reject player!");
+                                        }
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -76,7 +90,16 @@ public class NetworkThread {
                         case 2 ->
                                 {
                                     try {
-                                        System.out.println("Message B: " + dataInputStream.readUTF());
+                                        String position =  dataInputStream.readUTF(); //vector 3fn
+                                        Vector3fn newPosition = objectMapper.readValue(position, Vector3fn.class);
+                                        if (newPosition != null){
+                                            Player player = getPlayer(newPosition.name);
+                                            if (player != null){
+                                                player.pos.x = newPosition.x;
+                                                player.pos.y = newPosition.y;
+                                                player.pos.z = newPosition.z;
+                                            }
+                                        }
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }

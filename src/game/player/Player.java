@@ -13,7 +13,7 @@ import static game.chunk.Chunk.*;
 
 public class Player {
 
-    private static final List<Player> players = new ArrayList<Player>();
+    private static final List<Player> players = new ArrayList<>();
 
     public static List<Player> getAllPlayers(){
         return players;
@@ -80,6 +80,23 @@ public class Player {
     }
 
 
+
+    public static boolean playerExists(String playerName){
+        for (Player player : players){
+            if (player.name.equals(playerName)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static Player getPlayer(String name){
+        for (Player player : players){
+            if (player.name.equals(name)){
+                return player;
+            }
+        }
+        return null;
+    }
 
 
     public static void playersOnTick() {
