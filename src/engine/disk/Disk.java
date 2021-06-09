@@ -118,10 +118,12 @@ public class Disk {
 
         File test = new File(dir);
 
-        if (!test.canRead()){
+        if (!test.canRead() || !test.exists()){
             //System.out.println("FAILED TO LOAD A CHUNK!");
             return(null);
         }
+
+        //System.out.println(test.toString());
 
 
         //learned from https://www.journaldev.com/966/java-gzip-example-compress-decompress-file
@@ -129,17 +131,17 @@ public class Disk {
         try {
             FileInputStream fis = new FileInputStream(dir);
             GZIPInputStream gis = new GZIPInputStream(fis);
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             int len;
             bais = new ByteArrayOutputStream();
             while((len = gis.read(buffer)) != -1){
                 bais.write(buffer, 0, len);
             }
             //close resources
-            bais.close();
             gis.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            //System.out.println("ERROR AT 144");
             return null;
         }
 
@@ -148,6 +150,8 @@ public class Disk {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        bais.close();
 
         if (thisChunkLoaded == null){
             return null;

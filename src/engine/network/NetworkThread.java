@@ -110,7 +110,7 @@ public class NetworkThread {
                                     String position = dataInputStream.readUTF(); //vector 3fn
                                     Vector3dn newPosition = objectMapper.readValue(position, Vector3dn.class);
                                     if (newPosition != null) {
-                                        Player player = getPlayer(newPosition.name);
+                                        Player player = getPlayerByName(newPosition.name);
                                         if (player != null) {
                                             player.pos.x = newPosition.x;
                                             player.pos.y = newPosition.y;
@@ -129,10 +129,9 @@ public class NetworkThread {
                                     Player thisPlayer = getPlayerByInet(inetAddress);
                                     if (thisPlayer != null) {
                                         thisPlayer.chunkLoadingQueue.add(chunkRequest);
-                                        String backupString = new String(chunkRequest);
                                         String xString = chunkRequest.split(" ")[0];
                                         int x = Integer.parseInt(xString);
-                                        String zString = backupString.split(" ")[1];
+                                        String zString = chunkRequest.split(" ")[1];
                                         int z = Integer.parseInt(zString);
                                         genBiome(x, z);
                                     }

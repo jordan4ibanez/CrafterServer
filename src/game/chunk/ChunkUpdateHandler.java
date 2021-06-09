@@ -32,7 +32,6 @@ public class ChunkUpdateHandler {
             if (!chunkStackContainsBlock(thisUpdate.x, thisUpdate.z, thisUpdate.y)) {
                 key = thisUpdate.key;
             } else {
-                System.out.println("SEND DATA");
                 queue.remove(thisUpdate.key);
             }
             if (!key.equals("")) {

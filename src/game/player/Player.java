@@ -1,4 +1,5 @@
 package game.player;
+import engine.network.PlayerPosObject;
 import game.chunk.Chunk;
 import game.chunk.ChunkObject;
 import org.joml.Vector3d;
@@ -8,30 +9,32 @@ import org.joml.Vector3i;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
 import static engine.network.NetworkOutput.sendPlayerChunkData;
+import static engine.network.NetworkOutput.sendPlayerPosition;
 import static game.chunk.Chunk.*;
 
 
 public class Player {
 
-    private static final List<Player> players = new ArrayList<>();
+    private static final ConcurrentHashMap<String,Player> players = new ConcurrentHashMap<>();
 
     public static List<Player> getAllPlayers(){
-        return players;
+        return new ArrayList<>(players.values());
     }
 
     public static void addPlayer(String name, InetAddress inetAddress){
         Player thisPlayer = new Player();
         thisPlayer.name = name;
         thisPlayer.inetAddress = inetAddress;
-        players.add(thisPlayer);
+        players.put(name,thisPlayer);
     }
 
     public static Player getPlayerByInet(InetAddress inetAddress){
-        for (Player thisPlayer : players){
+        for (Player thisPlayer : players.values()){
             if (thisPlayer.inetAddress.equals(inetAddress)){
                 return thisPlayer;
             }
@@ -40,35 +43,46 @@ public class Player {
     }
 
     public static Player getPlayerByName(String name){
-        for (Player thisPlayer : players){
-            if (thisPlayer.name.equals(name)){
-                return thisPlayer;
-            }
-        }
-        return null;
+        return players.get(name);
     }
 
     public static void indexAndLoadQueuedChunksForEachPlayer(){
-        for (Player thisPlayer : players){
+        for (Player thisPlayer : players.values()){
             if (thisPlayer.chunkLoadingQueue.size() > 0){
+
                 String thisQueue = thisPlayer.chunkLoadingQueue.get(0);
 
-                thisPlayer.chunkLoadingQueue.add(thisQueue);
-                String backupString = new String(thisQueue);
                 String xString = thisQueue.split(" ")[0];
                 int x = Integer.parseInt(xString);
-                String zString = backupString.split(" ")[1];
+                String zString = thisQueue.split(" ")[1];
                 int z = Integer.parseInt(zString);
 
                 ChunkObject thisChunk = getChunk(x,z);
                 if (thisChunk != null){
                     sendPlayerChunkData(thisPlayer.inetAddress, thisChunk);
-                    thisPlayer.chunkLoadingQueue.remove(0);
+
+                    System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
+
+                    //remove all equal clones
+                    thisPlayer.chunkLoadingQueue.removeIf(thisUpdate -> thisUpdate.equals(thisQueue));
                 } else {
                     genBiome(x, z);
                 }
             }
         }
+    }
+
+    public static void sendThisPlayerOtherPlayerPos(String playerName){
+        for (Player thisPlayer : players.values()){
+            if (!thisPlayer.name.equals(playerName)){
+                PlayerPosObject thisPlayerPosObject = new PlayerPosObject();
+                thisPlayerPosObject.pos = thisPlayer.pos;
+                thisPlayerPosObject.rotation = (float)thisPlayer.camPos.y;
+                thisPlayerPosObject.name = thisPlayer.name;
+                sendPlayerPosition(players.get(playerName).inetAddress,thisPlayerPosObject);
+            }
+        }
+
     }
 
     public int health = 20;
@@ -133,46 +147,35 @@ public class Player {
         return inertia;
     }
 
-
-
     public static boolean playerExists(String playerName){
-        for (Player player : players){
-            if (player.name.equals(playerName)){
-                return true;
-            }
-        }
-        return false;
-    }
-    public static Player getPlayer(String name){
-        for (Player player : players){
-            if (player.name.equals(name)){
-                return player;
-            }
-        }
-        return null;
+        return players.get(playerName) != null;
     }
 
+
+    private static float playerDataTimerTicker = 0f;
 
     public static void playersOnTick() {
 
         float delta = getDelta();
 
-        for (Player thisPlayer : players) {
+        playerDataTimerTicker += delta;
+
+        //every 0.05 seconds
+        if (playerDataTimerTicker >= 0.05){
+            playerDataTimerTicker = 0f;
+
+            //send players other player positions
+            for (Player thisPlayer : players.values()){
+                sendThisPlayerOtherPlayerPos(thisPlayer.name);
+            }
+        }
+
+        for (Player thisPlayer : players.values()) {
 
 
         }
     }
 
-    public void updateWorldChunkLoader(Player thisPlayer){
-        int newChunkX = (int)Math.floor(thisPlayer.pos.x / 16f);
-        int newChunkZ = (int)Math.floor(thisPlayer.pos.z / 16f);
-
-        if (newChunkX != thisPlayer.currentChunk.x || newChunkZ != thisPlayer.currentChunk.z) {
-            thisPlayer.currentChunk.x = newChunkX;
-            thisPlayer.currentChunk.z = newChunkZ;
-            generateNewChunks(thisPlayer);
-        }
-    }
 
 
 }
