@@ -1,20 +1,19 @@
 package engine;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
+
+import static java.lang.System.nanoTime;
 
 public class Time {
 
-    private static double lastLoopTime = getTime();
+
+    private static long lastLoopTime = nanoTime();
 
     private static float delta;
 
-    private static double getTime() {
-        return glfwGetTime();
-    }
 
     public static void calculateDelta() {
-        double time = getTime();
-        delta = (float) (time - lastLoopTime);
+        long time = nanoTime();
+        delta = (float) (time - lastLoopTime) / 1000000f;
         lastLoopTime = time;
     }
 

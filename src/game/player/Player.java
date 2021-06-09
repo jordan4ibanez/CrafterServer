@@ -58,7 +58,7 @@ public class Player {
         for (Player thisPlayer : players.values()){
             if (thisPlayer.chunkLoadingQueue.size() > 0){
 
-                String thisQueue = thisPlayer.chunkLoadingQueue.get(0);
+                String thisQueue = thisPlayer.chunkLoadingQueue.elements().nextElement();
 
                 String xString = thisQueue.split(" ")[0];
                 int x = Integer.parseInt(xString);
@@ -72,7 +72,11 @@ public class Player {
                     System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
 
                     //remove all equal clones
-                    thisPlayer.chunkLoadingQueue.removeIf(thisUpdate -> thisUpdate.equals(thisQueue));
+                    for (String thisUpdate : thisPlayer.chunkLoadingQueue.values()){
+                        if (thisUpdate.equals(thisQueue)){
+                            thisPlayer.chunkLoadingQueue.remove(thisUpdate);
+                        }
+                    }
                 } else {
                     genBiome(x, z);
                 }
@@ -120,7 +124,7 @@ public class Player {
     public Vector3i oldPos = new Vector3i(0,0,0);
     public Vector3d oldRealPos = new Vector3d(0,0,0);
 
-    public List<String> chunkLoadingQueue = new ArrayList<>();
+    public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
 
     public Vector3d camPos = new Vector3d();
 
@@ -169,8 +173,9 @@ public class Player {
         playerDataTimerTicker += delta;
 
         //every 0.05 seconds
-        if (playerDataTimerTicker >= 0.05){
+        if (playerDataTimerTicker >= 0.05f){
             playerDataTimerTicker = 0f;
+            
 
             //send players other player positions
             for (Player thisPlayer : players.values()){

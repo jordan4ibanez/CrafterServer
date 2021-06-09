@@ -70,10 +70,10 @@ public class CrafterServer {
         gameUpdate();
         processOldChunks();
         indexAndLoadQueuedChunksForEachPlayer();
+        playersOnTick();
     }
 
     private static void gameUpdate() throws Exception {
-        playersOnTick();
         ItemEntity.onStep();
         TNTEntity.onTNTStep();
         fallingEntityOnStep();

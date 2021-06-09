@@ -19,13 +19,15 @@ public class Networking {
     private static final int port = 30_150;
 
 
-    private static final Server server = new Server(1_000_000,1_000_000);
+    private static final Server server = new Server(10_000_000,10_000_000);
 
     public static void initializeNetworking(){
 
-        server.start();
+
 
         Kryo kryo = server.getKryo();
+
+        kryo.reset();
 
         kryo.register(NetworkHandshake.class);
         kryo.register(PlayerPosObject.class);
@@ -36,6 +38,7 @@ public class Networking {
         kryo.register(byte[][].class);
         kryo.register(byte[].class);
 
+        server.start();
 
         try {
             server.bind(port);
@@ -58,7 +61,7 @@ public class Networking {
                     }
                 } else if (object instanceof ChunkRequest chunkRequest){
                     System.out.println(chunkRequest.playerName + " requested chunk: " + chunkRequest.x + " " + chunkRequest.z);
-                    Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.add(chunkRequest.x + " " + chunkRequest.z);
+                    Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.put(chunkRequest.x + " " + chunkRequest.z, chunkRequest.x + " " + chunkRequest.z);
                     genBiome(chunkRequest.x, chunkRequest.z);
                 }
             }
@@ -67,7 +70,8 @@ public class Networking {
             public void disconnected(Connection connection) {
                 Player thisDisconnectingPlayer = getPlayerByID(connection.getID());
 
-                if (thisDisconnectingPlayer != null & thisDisconnectingPlayer.name != null) {
+
+                if (Objects.requireNonNull(thisDisconnectingPlayer).name != null) {
                     System.out.println(thisDisconnectingPlayer.name + " has disconnected");
                 } else {
                     System.out.println("SOMEONE DISCONNECTED WITH A BROKEN INTERNAL ID!");
@@ -96,6 +100,7 @@ public class Networking {
 
 
     public static void sendPlayerPosition(int ID, PlayerPosObject playerPosObject) {
+        System.out.println("sending position object to" + ID);
         server.sendToTCP(ID, playerPosObject);
     }
 }
