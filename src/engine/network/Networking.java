@@ -8,6 +8,7 @@ import engine.disk.ChunkSavingObject;
 import game.chunk.ChunkObject;
 import game.player.Player;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.io.*;
 import java.util.Objects;
@@ -39,6 +40,7 @@ public class Networking {
         kryo.register(byte[][].class);
         kryo.register(byte[].class);
         kryo.register(Vector3d.class);
+        kryo.register(Vector3f.class);
 
         server.start();
 
@@ -68,7 +70,7 @@ public class Networking {
                 } else if (object instanceof PlayerPosObject playerPosObject){
                     Player thisPlayer = Objects.requireNonNull(getPlayerByName(playerPosObject.name));
                     thisPlayer.pos = playerPosObject.pos;
-                    thisPlayer.rotation = playerPosObject.rotation;
+                    thisPlayer.camRot = playerPosObject.cameraRot;
                 }
             }
 

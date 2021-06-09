@@ -89,7 +89,7 @@ public class Player {
             if (thisPlayer.ID != playerID){
                 PlayerPosObject thisPlayerPosObject = new PlayerPosObject();
                 thisPlayerPosObject.pos = thisPlayer.pos;
-                thisPlayerPosObject.rotation = thisPlayer.rotation;
+                thisPlayerPosObject.cameraRot = new Vector3f(thisPlayer.camRot);
                 thisPlayerPosObject.name = thisPlayer.name;
                 sendPlayerPosition(playerID,thisPlayerPosObject);
             }
@@ -101,7 +101,6 @@ public class Player {
     public int ID;
     public int renderDistance = 5;
     public Vector3d pos                  = loadPlayerPos();
-    public float rotation                = 0f;
     public final float eyeHeight         = 1.5f;
     public final float collectionHeight  = 0.7f;
     public final Vector3f inertia        = new Vector3f(0,0,0);
@@ -128,6 +127,7 @@ public class Player {
     public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
 
     public Vector3d camPos = new Vector3d();
+    public Vector3f camRot = new Vector3f();
 
     //block hardness cache
     public float stoneHardness = 0f;
