@@ -66,7 +66,9 @@ public class Networking {
                     Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.put(chunkRequest.x + " " + chunkRequest.z, chunkRequest.x + " " + chunkRequest.z);
                     genBiome(chunkRequest.x, chunkRequest.z);
                 } else if (object instanceof PlayerPosObject playerPosObject){
-                    Objects.requireNonNull(getPlayerByName(playerPosObject.name)).pos = playerPosObject.pos;
+                    Player thisPlayer = Objects.requireNonNull(getPlayerByName(playerPosObject.name));
+                    thisPlayer.pos = playerPosObject.pos;
+                    thisPlayer.rotation = playerPosObject.rotation;
                 }
             }
 
