@@ -9,6 +9,7 @@ import game.chunk.ChunkObject;
 import game.player.Player;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 import java.io.*;
 import java.util.Objects;
@@ -41,6 +42,8 @@ public class Networking {
         kryo.register(byte[].class);
         kryo.register(Vector3d.class);
         kryo.register(Vector3f.class);
+        kryo.register(BreakBlockClassThing.class);
+        kryo.register(Vector3i.class);
 
         server.start();
 
@@ -71,6 +74,8 @@ public class Networking {
                     Player thisPlayer = Objects.requireNonNull(getPlayerByName(playerPosObject.name));
                     thisPlayer.pos = playerPosObject.pos;
                     thisPlayer.camRot = playerPosObject.cameraRot;
+                } else if (object instanceof BreakBlockClassThing){
+                    System.out.println("I GOT YOUR THING MAN!");
                 }
             }
 
