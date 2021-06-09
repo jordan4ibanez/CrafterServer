@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
-import static engine.network.NetworkOutput.sendPlayerChunkData;
-import static engine.network.NetworkOutput.sendPlayerPosition;
+//import static engine.network.NetworkOutput.sendPlayerChunkData;
+//import static engine.network.NetworkOutput.sendPlayerPosition;
 import static game.chunk.Chunk.*;
 
 
@@ -59,7 +59,7 @@ public class Player {
 
                 ChunkObject thisChunk = getChunk(x,z);
                 if (thisChunk != null){
-                    sendPlayerChunkData(thisPlayer.inetAddress, thisChunk);
+                    //sendPlayerChunkData(thisPlayer.inetAddress, thisChunk);
 
                     System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
 
@@ -79,7 +79,7 @@ public class Player {
                 thisPlayerPosObject.pos = thisPlayer.pos;
                 thisPlayerPosObject.rotation = (float)thisPlayer.camPos.y;
                 thisPlayerPosObject.name = thisPlayer.name;
-                sendPlayerPosition(players.get(playerName).inetAddress,thisPlayerPosObject);
+                //sendPlayerPosition(players.get(playerName).inetAddress,thisPlayerPosObject);
             }
         }
 

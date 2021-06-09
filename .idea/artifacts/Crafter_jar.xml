@@ -30,6 +30,10 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/linux/lwjgl-openal.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/linux/lwjgl-stb-natives-linux.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/linux/lwjgl-natives-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-databind-2.11.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-annotations-2.11.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-core-2.11.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/kryonet-2.21-all.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/windows/lwjgl-bgfx-natives-windows.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/windows/lwjgl-openal-natives-windows.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/windows/pngdecoder.jar" path-in-jar="/" />
@@ -77,9 +81,6 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/windows/lwjgl-glfw-javadoc.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/windows/lwjgl-bgfx-javadoc.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/windows/lwjgl-assimp-javadoc.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-databind-2.11.3.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-annotations-2.11.3.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-core-2.11.3.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

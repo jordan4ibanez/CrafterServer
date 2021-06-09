@@ -9,7 +9,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.zip.GZIPOutputStream;
 
-import static engine.network.NetworkThread.getGameOutputPort;
+import static engine.network.NetworkThread.getGamePort;
 
 public class NetworkOutput {
 
@@ -26,10 +26,11 @@ public class NetworkOutput {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void sendOutHandshake(InetAddress ip, String playerHandshakeName) {
+        /*
         Socket socket = null;
         {
             try {
-                socket = new Socket(ip.getHostAddress(), getGameOutputPort());
+                socket = new Socket(ip.getHostAddress(), getGamePort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,7 +82,7 @@ public class NetworkOutput {
         Socket socket;
         {
             try {
-                socket = new Socket(ip.getHostAddress(), getGameOutputPort());
+                socket = new Socket(ip.getHostAddress(), getGamePort());
             } catch (IOException e) {
                 //e.printStackTrace();
                 return;
@@ -156,7 +157,7 @@ public class NetworkOutput {
         Socket socket;
         {
             try {
-                socket = new Socket(ip.getHostAddress(), getGameOutputPort());
+                socket = new Socket(ip.getHostAddress(), getGamePort());
             } catch (IOException e) {
                 //e.printStackTrace();
                 return;
@@ -215,5 +216,7 @@ public class NetworkOutput {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+         */
     }
 }

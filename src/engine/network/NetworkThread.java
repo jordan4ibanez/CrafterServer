@@ -1,5 +1,8 @@
 package engine.network;
 
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import engine.Vector3dn;
 import game.player.Player;
@@ -18,15 +21,10 @@ import static game.player.Player.*;
 
 public class NetworkThread {
 
-    private static final int inputPort = 30_150;
-    private static final int outputPort = 30_151;
+    private static final int port = 30_150;
 
-    public static int getGameInputPort(){
-        return inputPort;
-    }
-
-    public static int getGameOutputPort(){
-        return outputPort;
+    public static int getGamePort(){
+        return port;
     }
 
     //if players send garbage data, break connection, destroy player object
@@ -39,6 +37,30 @@ public class NetworkThread {
      */
 
     public static void startNetworkThread() {
+        Server server = new Server();
+        server.start();
+        try {
+            server.bind(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("AKA: THERE'S ALREADY A SERVER ON THIS PORT BOI");
+        }
+
+
+        server.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+
+                if (object instanceof String) {
+                    String request = (String)object;
+                    System.out.println(request);
+
+                    String response = "WOW THANK YOU!";
+                    connection.sendTCP(response);
+                }
+            }
+        });
+
+        /*
         new Thread(() -> {
 
             //used for raw data conversion
@@ -46,7 +68,7 @@ public class NetworkThread {
 
             ServerSocket serverSocket = null;
             try {
-                serverSocket = new ServerSocket(inputPort);
+                serverSocket = new ServerSocket(port);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -160,5 +182,7 @@ public class NetworkThread {
 
             }
         }).start();
+
+         */
     }
 }
