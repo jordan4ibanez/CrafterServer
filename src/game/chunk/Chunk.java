@@ -16,10 +16,11 @@ import static engine.Time.getDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.instantSave;
 import static engine.disk.SaveQueue.saveChunk;
+import static engine.network.Networking.sendPlayerChunkData;
 import static game.chunk.ChunkMath.posToIndex;
 import static game.chunk.ChunkUpdateHandler.chunkUpdate;
 import static game.light.Light.*;
-import static game.player.Player.getAllPlayers;
+import static game.player.Player.*;
 
 public class Chunk {
 
@@ -284,6 +285,17 @@ public class Chunk {
         lightFloodFill(x, y, z);
         thisChunk.modified = true;
         thisChunk.light[posToIndex(blockX, y, blockZ)] = getImmediateLight(x,y,z);
+
+        sendChunkDataToPlayersInArea(chunkX,chunkZ);
+    }
+
+
+    private static void sendChunkDataToPlayersInArea(int x, int z){
+        for (Player thisPlayer : getAllPlayers()){
+            if (getChunkDistanceFromPlayer(thisPlayer, x,z) < thisPlayer.renderDistance){
+                thisPlayer.chunkLoadingQueue.put(x + " " + z, x + " " + z);
+            }
+        }
     }
 
     public static void placeBlock(int x,int y,int z, int ID, int rot){

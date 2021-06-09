@@ -14,6 +14,7 @@ import org.joml.Vector3i;
 import java.io.*;
 import java.util.Objects;
 
+import static game.chunk.Chunk.digBlock;
 import static game.chunk.Chunk.genBiome;
 import static game.player.Player.*;
 
@@ -74,8 +75,9 @@ public class Networking {
                     Player thisPlayer = Objects.requireNonNull(getPlayerByName(playerPosObject.name));
                     thisPlayer.pos = playerPosObject.pos;
                     thisPlayer.camRot = playerPosObject.cameraRot;
-                } else if (object instanceof BreakBlockClassThing){
-                    System.out.println("I GOT YOUR THING MAN!");
+                } else if (object instanceof BreakBlockClassThing breakBlockClassThing){
+                    //System.out.println(breakBlockClassThing.breakingPos.x + " " + breakBlockClassThing.breakingPos.y + " " + breakBlockClassThing.breakingPos.z);
+                    digBlock(breakBlockClassThing.breakingPos.x, breakBlockClassThing.breakingPos.y, breakBlockClassThing.breakingPos.z);
                 }
             }
 

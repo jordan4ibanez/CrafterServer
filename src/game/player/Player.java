@@ -180,6 +180,7 @@ public class Player {
 
             //send players other player positions
             for (Player thisPlayer : players.values()){
+                updateWorldChunkLoader(thisPlayer);
                 sendThisPlayerOtherPlayerPos(thisPlayer.ID);
             }
         }
@@ -190,6 +191,16 @@ public class Player {
         }
     }
 
+
+    public static void updateWorldChunkLoader(Player thisPlayer){
+        int newChunkX = (int)Math.floor(thisPlayer.pos.x / 16f);
+        int newChunkZ = (int)Math.floor(thisPlayer.pos.z / 16f);
+
+        if (newChunkX != thisPlayer.currentChunk.x || newChunkZ != thisPlayer.currentChunk.z) {
+            thisPlayer.currentChunk.x = newChunkX;
+            thisPlayer.currentChunk.z = newChunkZ;
+        }
+    }
 
 
 }
