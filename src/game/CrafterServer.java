@@ -8,6 +8,7 @@ import static engine.Time.calculateDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.startSaveThread;
 import static engine.network.NetworkThread.startNetworkThread;
+import static engine.network.Networking.initializeNetworking;
 import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.*;
@@ -43,6 +44,7 @@ public class CrafterServer {
             updateWorldsPathToAvoidCrash();
             startSaveThread();
             startNetworkThread();
+            initializeNetworking();
             System.out.println("SERVER IS RUNNING!");
             while (true) {
                 gameLoop();

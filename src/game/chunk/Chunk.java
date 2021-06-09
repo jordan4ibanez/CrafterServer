@@ -33,23 +33,6 @@ public class Chunk {
         return map.get(x + " " + z);
     }
 
-    public static void initialChunkPayload(Player thisPlayer){
-        //create the initial map in memory
-        int chunkRenderDistance = thisPlayer.renderDistance;
-        Vector3i currentChunk = new Vector3i(thisPlayer.currentChunk.x, 0, thisPlayer.currentChunk.z);
-        for (int x = -chunkRenderDistance + currentChunk.x; x < chunkRenderDistance + currentChunk.x; x++){
-            for (int z = -chunkRenderDistance + currentChunk.z; z< chunkRenderDistance + currentChunk.z; z++){
-                if (getChunkDistanceFromPlayer(thisPlayer, x,z) <= chunkRenderDistance){
-                    genBiome(x,z);
-                    for (int y = 0; y < 8; y++){
-                        chunkUpdate(x,z,y);
-                        //generateChunkMesh(x,z,y); <- this one causes serious startup lag for slow pcs
-                    }
-                }
-            }
-        }
-    }
-
     private static double getChunkDistanceFromPlayer(Player thisPlayer, int x, int z){
         Vector3i currentChunk = new Vector3i(thisPlayer.currentChunk.x, 0, thisPlayer.currentChunk.z);
         return Math.max(getDistance(0,0,currentChunk.z, 0, 0, z), getDistance(currentChunk.x,0,0, x, 0, 0));

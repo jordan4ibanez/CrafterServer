@@ -3,29 +3,10 @@ package engine.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import engine.Vector3dn;
-import game.player.Player;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
-
-import static engine.network.NetworkOutput.sendOutHandshake;
-import static game.CrafterServer.isGameShouldClose;
-import static game.chunk.Chunk.genBiome;
-import static game.player.Player.*;
 
 public class NetworkThread {
-
-    private static final int port = 30_150;
-
-    public static int getGamePort(){
-        return port;
-    }
 
     //if players send garbage data, break connection, destroy player object
 
@@ -37,28 +18,7 @@ public class NetworkThread {
      */
 
     public static void startNetworkThread() {
-        Server server = new Server();
-        server.start();
-        try {
-            server.bind(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("AKA: THERE'S ALREADY A SERVER ON THIS PORT BOI");
-        }
 
-
-        server.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
-
-                if (object instanceof String) {
-                    String request = (String)object;
-                    System.out.println(request);
-
-                    String response = "WOW THANK YOU!";
-                    connection.sendTCP(response);
-                }
-            }
-        });
 
         /*
         new Thread(() -> {
@@ -150,12 +110,7 @@ public class NetworkThread {
                                     System.out.println(Arrays.toString(inetAddress.getAddress()) + " has requested chunks: " + chunkRequest);
                                     Player thisPlayer = getPlayerByInet(inetAddress);
                                     if (thisPlayer != null) {
-                                        thisPlayer.chunkLoadingQueue.add(chunkRequest);
-                                        String xString = chunkRequest.split(" ")[0];
-                                        int x = Integer.parseInt(xString);
-                                        String zString = chunkRequest.split(" ")[1];
-                                        int z = Integer.parseInt(zString);
-                                        genBiome(x, z);
+
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();

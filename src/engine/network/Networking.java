@@ -1,0 +1,101 @@
+package engine.network;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
+import engine.disk.ChunkSavingObject;
+import game.chunk.ChunkObject;
+import game.player.Player;
+
+import java.io.*;
+import java.util.Objects;
+
+import static game.chunk.Chunk.genBiome;
+import static game.player.Player.*;
+
+public class Networking {
+
+    private static final int port = 30_150;
+
+
+    private static final Server server = new Server(1_000_000,1_000_000);
+
+    public static void initializeNetworking(){
+
+        server.start();
+
+        Kryo kryo = server.getKryo();
+
+        kryo.register(NetworkHandshake.class);
+        kryo.register(PlayerPosObject.class);
+        kryo.register(ChunkRequest.class);
+        kryo.register(ChunkObject.class);
+        kryo.register(ChunkSavingObject.class);
+        kryo.register(int[].class);
+        kryo.register(byte[][].class);
+        kryo.register(byte[].class);
+
+
+        try {
+            server.bind(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("AKA: THERE'S ALREADY A SERVER ON THIS PORT BOI");
+        }
+
+
+        server.addListener(new Listener() {
+            public void received (Connection connection, Object object) {
+                if (object instanceof NetworkHandshake encodedHandshake) {
+                    if (!playerExists(encodedHandshake.name)){
+                        connection.sendTCP(encodedHandshake);
+                        addPlayer(encodedHandshake.name, connection.getID());
+                        System.out.println("Connection ID: " + connection.getID());
+                        System.out.println(encodedHandshake.name + "has joined the server");
+                    } else {
+                        connection.sendTCP(new NetworkHandshake());
+                    }
+                } else if (object instanceof ChunkRequest chunkRequest){
+                    System.out.println(chunkRequest.playerName + " requested chunk: " + chunkRequest.x + " " + chunkRequest.z);
+                    Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.add(chunkRequest.x + " " + chunkRequest.z);
+                    genBiome(chunkRequest.x, chunkRequest.z);
+                }
+            }
+
+            @Override
+            public void disconnected(Connection connection) {
+                Player thisDisconnectingPlayer = getPlayerByID(connection.getID());
+
+                if (thisDisconnectingPlayer != null & thisDisconnectingPlayer.name != null) {
+                    System.out.println(thisDisconnectingPlayer.name + " has disconnected");
+                } else {
+                    System.out.println("SOMEONE DISCONNECTED WITH A BROKEN INTERNAL ID!");
+                }
+
+                removePlayer(connection.getID());
+            }
+        });
+    }
+
+    public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) {
+
+        ChunkSavingObject savingObject = new ChunkSavingObject();
+
+        savingObject.I = thisChunk.ID;
+        savingObject.x = thisChunk.x;
+        savingObject.z = thisChunk.z;
+        savingObject.b = thisChunk.block;
+        savingObject.r = thisChunk.rotation;
+        savingObject.l = thisChunk.light;
+        savingObject.h = thisChunk.heightMap;
+        savingObject.e = thisChunk.lightLevel;
+
+        server.sendToTCP(ID, savingObject);
+    }
+
+
+    public static void sendPlayerPosition(int ID, PlayerPosObject playerPosObject) {
+        server.sendToTCP(ID, playerPosObject);
+    }
+}

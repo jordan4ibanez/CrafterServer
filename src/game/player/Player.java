@@ -1,41 +1,40 @@
 package game.player;
 import engine.network.PlayerPosObject;
-import game.chunk.Chunk;
+
 import game.chunk.ChunkObject;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
-//import static engine.network.NetworkOutput.sendPlayerChunkData;
-//import static engine.network.NetworkOutput.sendPlayerPosition;
+import static engine.network.Networking.sendPlayerChunkData;
+import static engine.network.Networking.sendPlayerPosition;
 import static game.chunk.Chunk.*;
 
 
 public class Player {
 
-    private static final ConcurrentHashMap<String,Player> players = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer,Player> players = new ConcurrentHashMap<>();
 
     public static List<Player> getAllPlayers(){
         return new ArrayList<>(players.values());
     }
 
-    public static void addPlayer(String name, InetAddress inetAddress){
+    public static void addPlayer(String name, int ID){
         Player thisPlayer = new Player();
         thisPlayer.name = name;
-        thisPlayer.inetAddress = inetAddress;
-        players.put(name,thisPlayer);
+        thisPlayer.ID = ID;
+        players.put(ID,thisPlayer);
     }
 
-    public static Player getPlayerByInet(InetAddress inetAddress){
+    public static Player getPlayerByID(int ID){
         for (Player thisPlayer : players.values()){
-            if (thisPlayer.inetAddress.equals(inetAddress)){
+            if (thisPlayer.ID == ID){
                 return thisPlayer;
             }
         }
@@ -43,7 +42,16 @@ public class Player {
     }
 
     public static Player getPlayerByName(String name){
-        return players.get(name);
+        for (Player thisPlayer : players.values()){
+            if (thisPlayer.name.equals(name)){
+                return thisPlayer;
+            }
+        }
+        return null;
+    }
+
+    public static void removePlayer(int ID){
+        players.remove(ID);
     }
 
     public static void indexAndLoadQueuedChunksForEachPlayer(){
@@ -59,7 +67,7 @@ public class Player {
 
                 ChunkObject thisChunk = getChunk(x,z);
                 if (thisChunk != null){
-                    //sendPlayerChunkData(thisPlayer.inetAddress, thisChunk);
+                    sendPlayerChunkData(thisPlayer.ID, thisChunk);
 
                     System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
 
@@ -72,21 +80,21 @@ public class Player {
         }
     }
 
-    public static void sendThisPlayerOtherPlayerPos(String playerName){
+    public static void sendThisPlayerOtherPlayerPos(int playerID){
         for (Player thisPlayer : players.values()){
-            if (!thisPlayer.name.equals(playerName)){
+            if (thisPlayer.ID != playerID){
                 PlayerPosObject thisPlayerPosObject = new PlayerPosObject();
                 thisPlayerPosObject.pos = thisPlayer.pos;
                 thisPlayerPosObject.rotation = (float)thisPlayer.camPos.y;
                 thisPlayerPosObject.name = thisPlayer.name;
-                //sendPlayerPosition(players.get(playerName).inetAddress,thisPlayerPosObject);
+                sendPlayerPosition(playerID,thisPlayerPosObject);
             }
         }
 
     }
 
     public int health = 20;
-    InetAddress inetAddress;
+    public int ID;
     public int renderDistance = 5;
     public Vector3d pos                  = loadPlayerPos();
     public final float eyeHeight         = 1.5f;
@@ -166,7 +174,7 @@ public class Player {
 
             //send players other player positions
             for (Player thisPlayer : players.values()){
-                sendThisPlayerOtherPlayerPos(thisPlayer.name);
+                sendThisPlayerOtherPlayerPos(thisPlayer.ID);
             }
         }
 
