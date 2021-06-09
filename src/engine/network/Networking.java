@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Server;
 import engine.disk.ChunkSavingObject;
 import game.chunk.ChunkObject;
 import game.player.Player;
+import org.joml.Vector3d;
 
 import java.io.*;
 import java.util.Objects;
@@ -37,6 +38,7 @@ public class Networking {
         kryo.register(int[].class);
         kryo.register(byte[][].class);
         kryo.register(byte[].class);
+        kryo.register(Vector3d.class);
 
         server.start();
 
@@ -63,6 +65,8 @@ public class Networking {
                     System.out.println(chunkRequest.playerName + " requested chunk: " + chunkRequest.x + " " + chunkRequest.z);
                     Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.put(chunkRequest.x + " " + chunkRequest.z, chunkRequest.x + " " + chunkRequest.z);
                     genBiome(chunkRequest.x, chunkRequest.z);
+                } else if (object instanceof PlayerPosObject playerPosObject){
+                    Objects.requireNonNull(getPlayerByName(playerPosObject.name)).pos = playerPosObject.pos;
                 }
             }
 
@@ -100,7 +104,7 @@ public class Networking {
 
 
     public static void sendPlayerPosition(int ID, PlayerPosObject playerPosObject) {
-        System.out.println("sending position object to" + ID);
+        //System.out.println("sending position object to" + ID);
         server.sendToTCP(ID, playerPosObject);
     }
 }

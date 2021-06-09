@@ -175,7 +175,7 @@ public class Player {
         //every 0.05 seconds
         if (playerDataTimerTicker >= 0.05f){
             playerDataTimerTicker = 0f;
-            
+
 
             //send players other player positions
             for (Player thisPlayer : players.values()){
