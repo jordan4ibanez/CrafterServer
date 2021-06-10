@@ -1,4 +1,5 @@
 package game.player;
+import engine.network.BlockBreakingReceiver;
 import engine.network.PlayerPosObject;
 
 import game.chunk.ChunkObject;
@@ -12,8 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
-import static engine.network.Networking.sendPlayerChunkData;
-import static engine.network.Networking.sendPlayerPosition;
+import static engine.network.Networking.*;
 import static game.chunk.Chunk.*;
 
 
@@ -24,6 +24,55 @@ public class Player {
     public static List<Player> getAllPlayers(){
         return new ArrayList<>(players.values());
     }
+
+    public int health = 20;
+    public int ID;
+    public int renderDistance = 5;
+    public Vector3d pos                  = loadPlayerPos();
+    public final float eyeHeight         = 1.5f;
+    public final float collectionHeight  = 0.7f;
+    public final Vector3f inertia        = new Vector3f(0,0,0);
+    public final float height            = 1.9f;
+    public final float width             = 0.3f;
+    public boolean mining                = false;
+    public boolean placing               = false;
+    public float placeTimer              = 0;
+    public String name;
+    public int currentInventorySelection = 0;
+    public int oldInventorySelection = 0;
+    public Vector3i oldWorldSelectionPos = new Vector3i();
+    public Vector3i worldSelectionPos    = new Vector3i();
+    public final Vector3i currentChunk = new Vector3i((int)Math.floor(pos.x / 16f),0,(int)Math.floor(pos.z / 16f));
+    public static int oldY = 0;
+    public final float reach = 3.575f;
+    public boolean sneaking              = false;
+    public boolean running               = false;
+    public float lightCheckTimer = 0f;
+    public byte lightLevel = 0;
+    public Vector3i oldPos = new Vector3i(0,0,0);
+    public Vector3d oldRealPos = new Vector3d(0,0,0);
+
+    public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, BlockBreakingReceiver> blockBreakingQueue = new ConcurrentHashMap<>();
+
+    public Vector3d camPos = new Vector3d();
+    public Vector3f camRot = new Vector3f();
+
+    //block hardness cache
+    public float stoneHardness = 0f;
+    public float dirtHardness = 0f;
+    public float woodHardness = 0f;
+    public float leafHardness = 0f;
+
+    //tool mining level cache
+    public float stoneMiningLevel = 0.3f;
+    public float dirtMiningLevel = 1f;
+    public float woodMiningLevel = 1f;
+    public float leafMiningLevel = 1f;
+
+
+
+
 
     public static void addPlayer(String name, int ID){
         Player thisPlayer = new Player();
@@ -97,49 +146,7 @@ public class Player {
 
     }
 
-    public int health = 20;
-    public int ID;
-    public int renderDistance = 5;
-    public Vector3d pos                  = loadPlayerPos();
-    public final float eyeHeight         = 1.5f;
-    public final float collectionHeight  = 0.7f;
-    public final Vector3f inertia        = new Vector3f(0,0,0);
-    public final float height            = 1.9f;
-    public final float width             = 0.3f;
-    public boolean mining                = false;
-    public boolean placing               = false;
-    public float placeTimer              = 0;
-    public String name;
-    public int currentInventorySelection = 0;
-    public int oldInventorySelection = 0;
-    public Vector3i oldWorldSelectionPos = new Vector3i();
-    public Vector3i worldSelectionPos    = new Vector3i();
-    public final Vector3i currentChunk = new Vector3i((int)Math.floor(pos.x / 16f),0,(int)Math.floor(pos.z / 16f));
-    public static int oldY = 0;
-    public final float reach = 3.575f;
-    public boolean sneaking              = false;
-    public boolean running               = false;
-    public float lightCheckTimer = 0f;
-    public byte lightLevel = 0;
-    public Vector3i oldPos = new Vector3i(0,0,0);
-    public Vector3d oldRealPos = new Vector3d(0,0,0);
 
-    public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
-
-    public Vector3d camPos = new Vector3d();
-    public Vector3f camRot = new Vector3f();
-
-    //block hardness cache
-    public float stoneHardness = 0f;
-    public float dirtHardness = 0f;
-    public float woodHardness = 0f;
-    public float leafHardness = 0f;
-
-    //tool mining level cache
-    public float stoneMiningLevel = 0.3f;
-    public float dirtMiningLevel = 1f;
-    public float woodMiningLevel = 1f;
-    public float leafMiningLevel = 1f;
 
 
 
@@ -186,11 +193,18 @@ public class Player {
         }
 
         for (Player thisPlayer : players.values()) {
-
-
+            sendThisPlayerBrokenBlocks(thisPlayer);
         }
     }
 
+
+    private static void sendThisPlayerBrokenBlocks(Player thisPlayer){
+        if (thisPlayer.blockBreakingQueue.size() > 0) {
+            BlockBreakingReceiver thisQueue = thisPlayer.blockBreakingQueue.elements().nextElement();
+            sendPlayerBrokenBlockData(thisPlayer.ID, thisQueue);
+            thisPlayer.blockBreakingQueue.remove(thisQueue.receivedPos.x + " " + thisQueue.receivedPos.y + " " + thisQueue.receivedPos.z);
+        }
+    }
 
     public static void updateWorldChunkLoader(Player thisPlayer){
         int newChunkX = (int)Math.floor(thisPlayer.pos.x / 16f);

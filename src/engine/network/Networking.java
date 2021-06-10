@@ -45,6 +45,7 @@ public class Networking {
         kryo.register(Vector3f.class);
         kryo.register(BreakBlockClassThing.class);
         kryo.register(Vector3i.class);
+        kryo.register(BlockBreakingReceiver.class);
 
         server.start();
 
@@ -76,7 +77,6 @@ public class Networking {
                     thisPlayer.pos = playerPosObject.pos;
                     thisPlayer.camRot = playerPosObject.cameraRot;
                 } else if (object instanceof BreakBlockClassThing breakBlockClassThing){
-                    //System.out.println(breakBlockClassThing.breakingPos.x + " " + breakBlockClassThing.breakingPos.y + " " + breakBlockClassThing.breakingPos.z);
                     digBlock(breakBlockClassThing.breakingPos.x, breakBlockClassThing.breakingPos.y, breakBlockClassThing.breakingPos.z);
                 }
             }
@@ -98,9 +98,7 @@ public class Networking {
     }
 
     public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) {
-
         ChunkSavingObject savingObject = new ChunkSavingObject();
-
         savingObject.I = thisChunk.ID;
         savingObject.x = thisChunk.x;
         savingObject.z = thisChunk.z;
@@ -109,8 +107,11 @@ public class Networking {
         savingObject.l = thisChunk.light;
         savingObject.h = thisChunk.heightMap;
         savingObject.e = thisChunk.lightLevel;
-
         server.sendToTCP(ID, savingObject);
+    }
+
+    public static void sendPlayerBrokenBlockData(int ID, BlockBreakingReceiver blockBreakingReceiver){
+        server.sendToTCP(ID, blockBreakingReceiver);
     }
 
 

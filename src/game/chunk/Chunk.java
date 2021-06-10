@@ -1,6 +1,7 @@
 package game.chunk;
 
 import engine.FastNoise;
+import engine.network.BlockBreakingReceiver;
 import game.player.Player;
 import org.joml.Vector3i;
 
@@ -16,7 +17,6 @@ import static engine.Time.getDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.instantSave;
 import static engine.disk.SaveQueue.saveChunk;
-import static engine.network.Networking.sendPlayerChunkData;
 import static game.chunk.ChunkMath.posToIndex;
 import static game.chunk.ChunkUpdateHandler.chunkUpdate;
 import static game.light.Light.*;
@@ -286,14 +286,14 @@ public class Chunk {
         thisChunk.modified = true;
         thisChunk.light[posToIndex(blockX, y, blockZ)] = getImmediateLight(x,y,z);
 
-        sendChunkDataToPlayersInArea(chunkX,chunkZ);
+        addBrokenBlockToPlayerQueue(chunkX,chunkZ, x,y,z);
     }
 
 
-    private static void sendChunkDataToPlayersInArea(int x, int z){
+    private static void addBrokenBlockToPlayerQueue(int chunkX, int chunkZ, int x, int y, int z){
         for (Player thisPlayer : getAllPlayers()){
-            if (getChunkDistanceFromPlayer(thisPlayer, x,z) < thisPlayer.renderDistance){
-                thisPlayer.chunkLoadingQueue.put(x + " " + z, x + " " + z);
+            if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
+                thisPlayer.blockBreakingQueue.put(x + " " + y + " " + z, new BlockBreakingReceiver(new Vector3i(x,y,z)));
             }
         }
     }
