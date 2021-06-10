@@ -1,7 +1,6 @@
 package engine.settings;
 import static engine.disk.Disk.loadSettingsFromDisk;
 import static engine.disk.Disk.saveSettingsToDisk;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class Settings {
 
@@ -47,30 +46,6 @@ public class Settings {
             //lower slower, higher faster
             chunkLoading = 2;
             settings.chunkLoading = 2;
-
-            keyForward = GLFW_KEY_W;
-            settings.keyForward = GLFW_KEY_W;
-
-            keyBack = GLFW_KEY_S;
-            settings.keyBack = GLFW_KEY_S;
-
-            keyLeft = GLFW_KEY_A;
-            settings.keyLeft = GLFW_KEY_A;
-
-            keyRight = GLFW_KEY_D;
-            settings.keyRight = GLFW_KEY_D;
-
-            keySneak = GLFW_KEY_LEFT_SHIFT;
-            settings.keySneak = GLFW_KEY_LEFT_SHIFT;
-
-            keyDrop = GLFW_KEY_Q;
-            settings.keyDrop = GLFW_KEY_Q;
-
-            keyJump = GLFW_KEY_SPACE;
-            settings.keyJump = GLFW_KEY_SPACE;
-
-            keyInventory = GLFW_KEY_E;
-            settings.keyInventory = GLFW_KEY_E;
 
             //save default values
             saveSettingsToDisk(settings);
