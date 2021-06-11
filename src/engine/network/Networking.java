@@ -20,8 +20,15 @@ import static game.player.Player.*;
 
 public class Networking {
 
-    private static final int port = 30_150;
+    private static int port = 30_150;
 
+    public static void setPort(int newPort){
+        port = newPort;
+    }
+
+    public static int getGamePort(){
+        return port;
+    }
 
     private static final Server server = new Server(10_000_000,10_000_000);
 

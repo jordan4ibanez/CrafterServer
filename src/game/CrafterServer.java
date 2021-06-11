@@ -4,10 +4,12 @@ import game.item.ItemEntity;
 import game.player.Player;
 import game.tnt.TNTEntity;
 
+import java.util.Arrays;
+
 import static engine.Time.calculateDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.startSaveThread;
-import static engine.network.Networking.initializeNetworking;
+import static engine.network.Networking.*;
 import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.*;
@@ -36,6 +38,19 @@ public class CrafterServer {
     //core game engine elements
     //load everything
     public static void main(String[] args){
+
+        //System.out.println("the args are: " + Arrays.toString(args));
+        if (args != null && args.length > 0 && !args[0].equals("")){
+            try {
+                int newPort = Integer.parseInt(args[0]);
+                setPort(newPort);
+                //System.out.println("the new port is: " + tryingPort);
+            } catch (Exception exception){
+                System.out.println(args[0] + " IS NOT A VALID PORT! EXITING WITH CODE -1!");
+                return;
+            }
+        }
+
         try{
             loadSettings();
             initGame();
@@ -43,7 +58,7 @@ public class CrafterServer {
             updateWorldsPathToAvoidCrash();
             startSaveThread();
             initializeNetworking();
-            System.out.println("SERVER IS RUNNING!");
+            System.out.println("SERVER IS RUNNING ON PORT: " + getGamePort());
             while (true) {
                 gameLoop();
             }
