@@ -481,8 +481,10 @@ public class Chunk {
 
                 if (thisChunk == null) {
                     thisChunk = new ChunkObject(chunkX,chunkZ);
-                    map.put(chunkX + " " + chunkZ, thisChunk);
+                    //do not put chunk in yet, or else main thread worker for networking
+                    //will send unfinished "corrupted" chunks
                 }
+
                 thisChunk.modified = true;
                 //biome max 128 trees
                 Vector3i[] treePosArray = new Vector3i[128];
@@ -644,6 +646,9 @@ public class Chunk {
                     }
 
                 }
+
+                //this chunk is finished, save it to main thread memory pool
+                map.put(chunkX + " " + chunkZ, thisChunk);
 
                 //dump everything into the chunk updater
                 for (int i = 0; i < 8; i++) {
