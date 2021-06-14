@@ -58,6 +58,10 @@ public class CrafterServer {
             updateWorldsPathToAvoidCrash();
             startSaveThread();
             initializeNetworking();
+
+            //server successfully initialized, output info
+            outputServerText();
+
             System.out.println("SERVER IS RUNNING ON PORT: " + getGamePort());
             while (true) {
                 gameLoop();
@@ -97,5 +101,16 @@ public class CrafterServer {
     public static void initGame() {
         //this initializes the block definitions
         initializeBlocks();
+    }
+
+
+    private static void outputServerText(){
+        System.out.println("   _____ _____            ______ _______ ______ _____  ");
+        System.out.println("  / ____|  __ \\     /\\   |  ____|__   __|  ____|  __ \\ ");
+        System.out.println(" | |    | |__) |   /  \\  | |__     | |  | |__  | |__) |");
+        System.out.println(" | |    |  _  /   / /\\ \\ |  __|    | |  |  __| |  _  / ");
+        System.out.println(" | |____| | \\ \\  / ____ \\| |       | |  | |____| | \\ \\ ");
+        System.out.println("  \\_____|_|  \\_\\/_/    \\_\\_|       |_|  |______|_|  \\_\\");
+        System.out.println("");
     }
 }
