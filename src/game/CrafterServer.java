@@ -4,8 +4,6 @@ import game.item.ItemEntity;
 import game.player.Player;
 import game.tnt.TNTEntity;
 
-import java.util.Arrays;
-
 import static engine.Time.calculateDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.startSaveThread;
@@ -15,8 +13,10 @@ import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.*;
 import static game.chunk.ChunkUpdateHandler.chunkUpdater;
 import static game.falling.FallingEntity.fallingEntityOnStep;
+import static game.item.ItemEntity.itemsOnTick;
 import static game.mob.Mob.mobsOnTick;
 import static game.player.Player.*;
+import static game.tnt.TNTEntity.onTNTStep;
 
 public class CrafterServer {
 
@@ -91,8 +91,8 @@ public class CrafterServer {
     }
 
     private static void gameUpdate() throws Exception {
-        ItemEntity.onStep();
-        TNTEntity.onTNTStep();
+        itemsOnTick();
+        onTNTStep();
         fallingEntityOnStep();
         mobsOnTick();
     }

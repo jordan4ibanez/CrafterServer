@@ -3,6 +3,7 @@ package game.chunk;
 import engine.FastNoise;
 import engine.network.BlockBreakingReceiver;
 import game.player.Player;
+import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import static engine.Time.getDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.instantSave;
 import static engine.disk.SaveQueue.saveChunk;
+import static game.blocks.BlockDefinition.onDigCall;
 import static game.chunk.ChunkMath.posToIndex;
 import static game.chunk.ChunkUpdateHandler.chunkUpdate;
 import static game.light.Light.*;
@@ -272,6 +274,7 @@ public class Chunk {
         if (thisChunk.block == null){
             return;
         }
+        int oldBlock = thisChunk.block[posToIndex(blockX, y, blockZ)];
         thisChunk.block[posToIndex(blockX, y, blockZ)] = 0;
         thisChunk.rotation[posToIndex(blockX, y, blockZ)] = 0;
         if (thisChunk.heightMap[blockX][blockZ] == y){
@@ -287,6 +290,8 @@ public class Chunk {
         thisChunk.light[posToIndex(blockX, y, blockZ)] = getImmediateLight(x,y,z);
 
         addBrokenBlockToPlayerQueue(chunkX,chunkZ, x,y,z);
+
+        onDigCall(oldBlock, new Vector3d(x,y,z));
     }
 
 

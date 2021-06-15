@@ -5,6 +5,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.FancyMath.getDistance;
 import static engine.Time.getDelta;
@@ -13,23 +14,27 @@ import static game.item.Item.getCurrentID;
 import static game.player.Player.getAllPlayers;
 
 public class ItemEntity {
-    private final static Map<Integer, Item> items = new HashMap<>();
+    private final static ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<>();
 
     private final static float itemCollisionWidth = 0.2f;
 
     public static void createItem(String name, Vector3d pos, int stack){
+        System.out.println("created item 1");
         items.put(getCurrentID(), new Item(name, pos, stack));
     }
 
     public static void createItem(String name, Vector3d pos, int stack, float life){
+        System.out.println("created item 2");
         items.put(getCurrentID(), new Item(name, pos, stack, life));
     }
 
     public static void createItem(String name, Vector3d pos, Vector3f inertia, int stack){
+        System.out.println("created item 3");
         items.put(getCurrentID(), new Item(name, pos, inertia, stack));
     }
 
     public static void createItem(String name, Vector3d pos, Vector3f inertia, int stack, float life){
+        System.out.println("created item 4");
         items.put(getCurrentID(), new Item(name, pos, inertia, stack, life));
     }
 
@@ -39,8 +44,10 @@ public class ItemEntity {
 
     private static final Deque<Integer> deletionQueue = new ArrayDeque<>();
 
-    public static void onStep(){
+    public static void itemsOnTick(){
+
         float delta = getDelta();
+
         for (Item thisItem : items.values()){
 
             if (thisItem.collectionTimer > 0f){
