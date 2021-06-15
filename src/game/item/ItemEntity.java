@@ -38,7 +38,7 @@ public class ItemEntity {
         items.put(getCurrentID(), new Item(name, pos, inertia, stack, life));
     }
 
-    public static Collection<Item> getAllItems(){
+    public static Collection<Item> getAllItemEntities(){
         return items.values();
     }
 

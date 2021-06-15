@@ -1,20 +1,25 @@
 package game.player;
 import engine.network.BlockBreakingReceiver;
+import engine.network.ItemSendingObject;
 import engine.network.PlayerPosObject;
 
 import game.chunk.ChunkObject;
+import game.item.Item;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static engine.FancyMath.getDistance;
 import static engine.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
 import static engine.network.Networking.*;
 import static game.chunk.Chunk.*;
+import static game.item.ItemEntity.getAllItemEntities;
 
 
 public class Player {
@@ -28,6 +33,7 @@ public class Player {
     public int health = 20;
     public int ID;
     public int renderDistance = 5;
+    public int itemRenderDistance = 15;
     public Vector3d pos                  = loadPlayerPos();
     public final float eyeHeight         = 1.5f;
     public final float collectionHeight  = 0.7f;
@@ -185,15 +191,49 @@ public class Player {
             playerDataTimerTicker = 0f;
 
 
-            //send players other player positions
             for (Player thisPlayer : players.values()){
+
+                //update their world chunk loader to discard far chunks if not within
+                //an overlapping box of another player
                 updateWorldChunkLoader(thisPlayer);
+
+                //send players other player positions
                 sendThisPlayerOtherPlayerPos(thisPlayer.ID);
+
+                //send players items within their item render distance
+                sendThisPlayerItemEntities(thisPlayer);
+
             }
+
         }
 
+        //do this every tick as it's very light
+        //mining will appear to lag very slightly if not
         for (Player thisPlayer : players.values()) {
             sendThisPlayerBrokenBlocks(thisPlayer);
+        }
+    }
+
+    private static void sendThisPlayerItemEntities(Player thisPlayer){
+        Collection<Item> allItemEntities = getAllItemEntities();
+
+        //we are creating new Vector3d objects here as to not cause
+        //a memory leak
+        Vector3d pos1 = new Vector3d(thisPlayer.pos);
+
+        double acceptableDistance = thisPlayer.renderDistance;
+
+        int ID = thisPlayer.ID;
+
+        for (Item thisItem : allItemEntities){
+
+            Vector3d pos2 = new Vector3d(thisItem.pos);
+
+            if (getDistance(pos1,pos2) <= acceptableDistance){
+                ItemSendingObject itemSendingObject = new ItemSendingObject(thisItem.pos, thisItem.ID, thisItem.name);
+
+                sendPlayerItemData(ID, itemSendingObject);
+            }
         }
     }
 
@@ -206,7 +246,7 @@ public class Player {
         }
     }
 
-    public static void updateWorldChunkLoader(Player thisPlayer){
+    private static void updateWorldChunkLoader(Player thisPlayer){
         int newChunkX = (int)Math.floor(thisPlayer.pos.x / 16f);
         int newChunkZ = (int)Math.floor(thisPlayer.pos.z / 16f);
 
@@ -215,6 +255,4 @@ public class Player {
             thisPlayer.currentChunk.z = newChunkZ;
         }
     }
-
-
 }
