@@ -178,11 +178,11 @@ public class Player {
     }
 
 
-    private static float playerDataTimerTicker = 0f;
+    private static double playerDataTimerTicker = 0d;
 
     public static void playersOnTick() {
 
-        float delta = getDelta();
+        double delta = getDelta();
 
         playerDataTimerTicker += delta;
 

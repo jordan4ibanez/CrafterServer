@@ -14,7 +14,7 @@ public class TNTEntity {
     private static int totalTNT = 0;
     private static final Vector3d[] tntPos = new Vector3d[MAX_ID_AMOUNT];
     private static final Vector3d[] tntScale = new Vector3d[MAX_ID_AMOUNT];
-    private static final float[] tntTimer =    new float[MAX_ID_AMOUNT];
+    private static final double[] tntTimer =    new double[MAX_ID_AMOUNT];
     private static final boolean[] tntExists =    new boolean[MAX_ID_AMOUNT];
     private static final Vector3f[] tntInertia = new Vector3f[MAX_ID_AMOUNT];
 
@@ -54,7 +54,7 @@ public class TNTEntity {
     }
 
     public static void onTNTStep() throws Exception {
-        float delta = getDelta();
+        double delta = getDelta();
         for (int i = 0; i < totalTNT; i++){
             tntTimer[i] += delta;
             applyInertia(tntPos[i], tntInertia[i], true, tntSize, tntSize * 2, true, false, true, false, false);

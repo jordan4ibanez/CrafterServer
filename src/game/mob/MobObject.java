@@ -16,7 +16,7 @@ public class MobObject {
     public final int ID;
 
     public float animationTimer;
-    public float timer;
+    public double timer;
     public boolean onGround;
     public boolean stand;
 

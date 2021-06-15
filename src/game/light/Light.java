@@ -15,14 +15,14 @@ public class Light {
 
     private static byte currentLightLevel = 15;
     private static boolean goUp = false;
-    private static float dayLightTimer = 0.f;
+    private static double dayLightTimer = 0d;
 
     public static byte getCurrentGlobalLightLevel(){
         return currentLightLevel;
     }
 
     public static void testLightLevel(){
-        float delta = getDelta();
+        double delta = getDelta();
         dayLightTimer += delta;
 
         if (dayLightTimer >= 5.f){

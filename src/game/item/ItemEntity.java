@@ -7,11 +7,9 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static engine.FancyMath.getDistance;
 import static engine.Time.getDelta;
 import static game.collision.Collision.applyInertia;
 import static game.item.Item.getCurrentID;
-import static game.player.Player.getAllPlayers;
 
 public class ItemEntity {
     private final static ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<>();
@@ -46,37 +44,28 @@ public class ItemEntity {
 
     public static void itemsOnTick(){
 
-        float delta = getDelta();
-
+        double delta = getDelta();
 
         for (Item thisItem : items.values()){
 
-            /*
+            //System.out.println(thisItem.timer);
+
             if (thisItem.collectionTimer > 0f){
-
-                System.out.println("OH MY GOD IT'S DELETING HERE!");
-                System.out.println(thisItem.collectionTimer);
-                System.out.println("OH MY GOD IT'S DELETING HERE!");
-
-
                 thisItem.collectionTimer -= delta;
                 if (thisItem.collectionTimer <= 0){
                     thisItem.deletionOkay = true;
                 }
             }
-             */
 
-            //thisItem.timer += delta;
+            thisItem.timer += delta;
 
-            System.out.println(thisItem.timer);
-
-            /*
             //delete items that are too old
             if (thisItem.timer > 50f){
                 deletionQueue.add(thisItem.ID);
             }
 
             //collect items after 3 seconds
+            /*
             if (thisItem.timer > 3f){
                 for (Player player : getAllPlayers()) {
 
@@ -104,21 +93,18 @@ public class ItemEntity {
             }
 
 
+
+             */
             if (thisItem.collecting) {
                 applyInertia(thisItem.pos, thisItem.inertia, false, itemCollisionWidth, itemCollisionWidth, false, false, false, false, false);
             } else {
-            */
-
                 applyInertia(thisItem.pos, thisItem.inertia, false, itemCollisionWidth, itemCollisionWidth, true, false, true, false, false);
-            //}
+            }
 
-            /*
+
             if (thisItem.pos.y < 0){
                 deletionQueue.add(thisItem.ID);
             }
-
-             */
-
         }
 
         while (!deletionQueue.isEmpty()){
