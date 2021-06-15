@@ -201,7 +201,7 @@ public class Player {
                 sendThisPlayerOtherPlayerPos(thisPlayer.ID);
 
                 //send players items within their item render distance
-                //sendThisPlayerItemEntities(thisPlayer);
+                sendThisPlayerItemEntities(thisPlayer);
 
             }
 
@@ -229,11 +229,7 @@ public class Player {
 
             Vector3d pos2 = new Vector3d(thisItem.pos);
 
-            //System.out.println(getDistance(pos1,pos2));
-
             if (getDistance(pos1,pos2) <= acceptableDistance){
-
-                System.out.println("sending");
 
                 ItemSendingObject itemSendingObject = new ItemSendingObject(thisItem.pos, thisItem.ID, thisItem.name);
 
