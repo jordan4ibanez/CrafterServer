@@ -47,19 +47,20 @@ public class Chunk {
     private static float saveTimer = 0f;
     public static void globalChunkSaveToDisk(){
         saveTimer += getDelta();
+        //System.out.println(saveTimer);
         //save interval is 3 seconds
         if (saveTimer >= 3f){
             for (Player thisPlayer : getAllPlayers()){
-
-                updateWorldsPathToAvoidCrash();
                 savePlayerPos(thisPlayer.name, thisPlayer.pos);
-                for (ChunkObject thisChunk : map.values()){
-                    if (thisChunk.modified) {
-                        saveChunk(thisChunk);
-                        thisChunk.modified = false;
-                    }
+            }
+            updateWorldsPathToAvoidCrash();
+            for (ChunkObject thisChunk : map.values()){
+                if (thisChunk.modified) {
+                    saveChunk(thisChunk);
+                    thisChunk.modified = false;
                 }
             }
+
             saveTimer = 0f;
         }
     }
