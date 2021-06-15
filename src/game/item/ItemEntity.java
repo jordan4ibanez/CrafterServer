@@ -1,5 +1,6 @@
 package game.item;
 
+import engine.network.ItemPickupNotification;
 import game.player.Player;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -7,9 +8,12 @@ import org.joml.Vector3f;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static engine.FancyMath.getDistance;
 import static engine.Time.getDelta;
+import static engine.network.Networking.sendPlayerPickupNotification;
 import static game.collision.Collision.applyInertia;
 import static game.item.Item.getCurrentID;
+import static game.player.Player.getAllPlayers;
 
 public class ItemEntity {
     private final static ConcurrentHashMap<Integer, Item> items = new ConcurrentHashMap<>();
@@ -17,22 +21,18 @@ public class ItemEntity {
     private final static float itemCollisionWidth = 0.2f;
 
     public static void createItem(String name, Vector3d pos, int stack){
-        System.out.println("created item 1");
         items.put(getCurrentID(), new Item(name, pos, stack));
     }
 
     public static void createItem(String name, Vector3d pos, int stack, float life){
-        System.out.println("created item 2");
         items.put(getCurrentID(), new Item(name, pos, stack, life));
     }
 
     public static void createItem(String name, Vector3d pos, Vector3f inertia, int stack){
-        System.out.println("created item 3");
         items.put(getCurrentID(), new Item(name, pos, inertia, stack));
     }
 
     public static void createItem(String name, Vector3d pos, Vector3f inertia, int stack, float life){
-        System.out.println("created item 4");
         items.put(getCurrentID(), new Item(name, pos, inertia, stack, life));
     }
 
@@ -47,8 +47,6 @@ public class ItemEntity {
         double delta = getDelta();
 
         for (Item thisItem : items.values()){
-
-            //System.out.println(thisItem.timer);
 
             if (thisItem.collectionTimer > 0f){
                 thisItem.collectionTimer -= delta;
@@ -65,17 +63,21 @@ public class ItemEntity {
             }
 
             //collect items after 3 seconds
-            /*
+
             if (thisItem.timer > 3f){
                 for (Player player : getAllPlayers()) {
 
-                    if (getDistance(thisItem.pos, player.pos) < 3f) {
+                    Vector3d playerPos = new Vector3d(player.pos);
+
+                    if (getDistance(thisItem.pos, playerPos) < 3f) {
                         if (!thisItem.collecting) {
                             thisItem.collecting = true;
                             thisItem.collectionTimer = 0.1f;
+
+                            sendPlayerPickupNotification(player.ID, new ItemPickupNotification(thisItem.name, thisItem.stack));
                         }
                         //do not do else-if here, can go straight to this logic
-                        Vector3d normalizedPos = new Vector3d(player.pos.add(0, player.collectionHeight,0));
+                        Vector3d normalizedPos = new Vector3d(playerPos.add(0, player.collectionHeight,0));
                         normalizedPos.sub(thisItem.pos).normalize().mul(15f);
 
                         Vector3f normalizedDirection = new Vector3f();
@@ -86,15 +88,12 @@ public class ItemEntity {
                         thisItem.inertia = normalizedDirection;
                     }
 
-                    if (getDistance(thisItem.pos, new Vector3d(player.pos.add(0, player.collectionHeight,0))) < 0.2f || thisItem.deletionOkay) {
+                    if (getDistance(thisItem.pos, new Vector3d(playerPos.add(0, player.collectionHeight,0))) < 0.2f || thisItem.deletionOkay) {
                         deletionQueue.add(thisItem.ID);
                     }
                 }
             }
 
-
-
-             */
             if (thisItem.collecting) {
                 applyInertia(thisItem.pos, thisItem.inertia, false, itemCollisionWidth, itemCollisionWidth, false, false, false, false, false);
             } else {

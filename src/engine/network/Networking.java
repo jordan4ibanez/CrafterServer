@@ -54,6 +54,7 @@ public class Networking {
         kryo.register(Vector3i.class);
         kryo.register(BlockBreakingReceiver.class);
         kryo.register(ItemSendingObject.class);
+        kryo.register(ItemPickupNotification.class);
 
         server.start();
 
@@ -77,11 +78,12 @@ public class Networking {
                         connection.sendTCP(new NetworkHandshake());
                     }
                 } else if (object instanceof ChunkRequest chunkRequest){
-                    System.out.println(chunkRequest.playerName + " requested chunk: " + chunkRequest.x + " " + chunkRequest.z);
+                    //System.out.println(chunkRequest.playerName + " requested chunk: " + chunkRequest.x + " " + chunkRequest.z);
                     Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.put(chunkRequest.x + " " + chunkRequest.z, chunkRequest.x + " " + chunkRequest.z);
                     genBiome(chunkRequest.x, chunkRequest.z);
                 } else if (object instanceof PlayerPosObject playerPosObject){
                     Player thisPlayer = Objects.requireNonNull(getPlayerByName(playerPosObject.name));
+                    //System.out.println(playerPosObject.pos.x + " " + playerPosObject.pos.y + " " + playerPosObject.pos.z);
                     thisPlayer.pos = playerPosObject.pos;
                     thisPlayer.camRot = playerPosObject.cameraRot;
                 } else if (object instanceof BreakBlockClassThing breakBlockClassThing){
@@ -124,6 +126,10 @@ public class Networking {
 
     public static void sendPlayerItemData(int ID, ItemSendingObject itemSendingObject){
         server.sendToTCP(ID, itemSendingObject);
+    }
+
+    public static void sendPlayerPickupNotification(int ID, ItemPickupNotification itemPickupNotification){
+        server.sendToTCP(ID, itemPickupNotification);
     }
 
 
