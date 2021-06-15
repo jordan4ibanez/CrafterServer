@@ -176,7 +176,7 @@ public class Player {
 
     public static void playersOnTick() {
 
-        float delta = getDelta();
+        double delta = getDelta();
 
         playerDataTimerTicker += delta;
 

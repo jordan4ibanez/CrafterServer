@@ -46,7 +46,7 @@ public class ItemEntity {
 
     public static void itemsOnTick(){
 
-        float delta = getDelta();
+        double delta = getDelta();
 
         for (Item thisItem : items.values()){
 
