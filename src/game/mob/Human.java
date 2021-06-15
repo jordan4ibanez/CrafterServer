@@ -18,7 +18,7 @@ public class Human {
         @Override
         public void onTick(MobObject thisObject) {
 
-            double delta = getDelta();
+            float delta = getDelta();
 
             thisObject.timer += delta;
 

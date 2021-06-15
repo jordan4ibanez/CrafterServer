@@ -178,11 +178,11 @@ public class Player {
     }
 
 
-    private static double playerDataTimerTicker = 0f;
+    private static float playerDataTimerTicker = 0f;
 
     public static void playersOnTick() {
 
-        double delta = getDelta();
+        float delta = getDelta();
 
         playerDataTimerTicker += delta;
 
@@ -201,7 +201,7 @@ public class Player {
                 sendThisPlayerOtherPlayerPos(thisPlayer.ID);
 
                 //send players items within their item render distance
-                sendThisPlayerItemEntities(thisPlayer);
+                //sendThisPlayerItemEntities(thisPlayer);
 
             }
 
@@ -221,7 +221,7 @@ public class Player {
         //a memory leak
         Vector3d pos1 = new Vector3d(thisPlayer.pos);
 
-        double acceptableDistance = thisPlayer.renderDistance;
+        double acceptableDistance = thisPlayer.itemRenderDistance;
 
         int ID = thisPlayer.ID;
 
@@ -229,7 +229,12 @@ public class Player {
 
             Vector3d pos2 = new Vector3d(thisItem.pos);
 
+            //System.out.println(getDistance(pos1,pos2));
+
             if (getDistance(pos1,pos2) <= acceptableDistance){
+
+                System.out.println("sending");
+
                 ItemSendingObject itemSendingObject = new ItemSendingObject(thisItem.pos, thisItem.ID, thisItem.name);
 
                 sendPlayerItemData(ID, itemSendingObject);

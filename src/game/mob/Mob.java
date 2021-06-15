@@ -45,7 +45,7 @@ public class Mob {
     public static void mobsOnTick(){
         int count = 0;
 
-        double delta = getDelta();
+        float delta = getDelta();
 
         for (MobObject thisMob : mobs){
             if (thisMob == null){

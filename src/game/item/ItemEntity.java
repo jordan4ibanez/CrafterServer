@@ -46,20 +46,31 @@ public class ItemEntity {
 
     public static void itemsOnTick(){
 
-        double delta = getDelta();
+        float delta = getDelta();
+
 
         for (Item thisItem : items.values()){
 
+            /*
             if (thisItem.collectionTimer > 0f){
+
+                System.out.println("OH MY GOD IT'S DELETING HERE!");
+                System.out.println(thisItem.collectionTimer);
+                System.out.println("OH MY GOD IT'S DELETING HERE!");
+
 
                 thisItem.collectionTimer -= delta;
                 if (thisItem.collectionTimer <= 0){
                     thisItem.deletionOkay = true;
                 }
             }
+             */
 
-            thisItem.timer += delta;
+            //thisItem.timer += delta;
 
+            System.out.println(thisItem.timer);
+
+            /*
             //delete items that are too old
             if (thisItem.timer > 50f){
                 deletionQueue.add(thisItem.ID);
@@ -92,15 +103,22 @@ public class ItemEntity {
                 }
             }
 
+
             if (thisItem.collecting) {
                 applyInertia(thisItem.pos, thisItem.inertia, false, itemCollisionWidth, itemCollisionWidth, false, false, false, false, false);
             } else {
-                applyInertia(thisItem.pos, thisItem.inertia, false, itemCollisionWidth, itemCollisionWidth, true, false, true, false, false);
-            }
+            */
 
+                applyInertia(thisItem.pos, thisItem.inertia, false, itemCollisionWidth, itemCollisionWidth, true, false, true, false, false);
+            //}
+
+            /*
             if (thisItem.pos.y < 0){
                 deletionQueue.add(thisItem.ID);
             }
+
+             */
+
         }
 
         while (!deletionQueue.isEmpty()){

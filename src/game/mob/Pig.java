@@ -19,7 +19,7 @@ public class Pig {
     private final static MobInterface mobInterface = new MobInterface() {
         @Override
         public void onTick(MobObject thisObject) {
-            double delta = getDelta();
+            float delta = getDelta();
 
             thisObject.timer += delta;
 

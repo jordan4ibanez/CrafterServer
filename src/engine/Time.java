@@ -8,16 +8,21 @@ public class Time {
 
     private static long lastLoopTime = nanoTime();
 
-    private static double delta;
+    private static float delta;
 
 
     public static void calculateDelta() {
         long time = nanoTime();
-        delta = (time - lastLoopTime) / 1000000d;
+        delta = (float)(time - lastLoopTime) / 1_000_000f;
         lastLoopTime = time;
+
+        //this is crash recursion protection
+        if (delta > 0.05){
+            delta = 0.05f;
+        }
     }
 
-    public static double getDelta() {
+    public static float getDelta() {
         return(delta);
     }
 }

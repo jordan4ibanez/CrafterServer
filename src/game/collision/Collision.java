@@ -14,19 +14,20 @@ import static game.collision.CustomBlockBox.*;
 public class Collision {
     private static float inWater = 0;
 
-    private static double adjustedDelta;
+    private static float adjustedDelta;
 
     //this probably definitely absolutely should not take isPlayer as a value
     public static boolean applyInertia(Vector3d pos, Vector3f inertia, boolean onGround, float width, float height, boolean gravity, boolean sneaking, boolean applyCollision, boolean airFriction, boolean isPlayer){
-        double delta = getDelta();
+        float delta = getDelta();
 
         //the precision goal for delta is 0.001f, this adjusts it to be so
         //the side effect, is the lower your FPS, the more it has to loop
         int loops = 1;
 
         if (delta >  0.001f){
+            System.out.println(delta / 0.001f);
             loops = (int)Math.floor(delta / 0.001f);
-            adjustedDelta = (delta/(double)loops);
+            adjustedDelta = (delta/(float)loops);
         } else {
             adjustedDelta = delta;
         }
