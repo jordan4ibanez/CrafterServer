@@ -187,9 +187,9 @@ public class Disk {
         }
     }
 
-    public static Vector3d loadPlayerPos(){
+    public static Vector3d loadPlayerPos(String name){
 
-        File test = new File("Worlds/world" + currentActiveWorld + "/playerPos.data");
+        File test = new File("Worlds/world" + currentActiveWorld + "/" + name + "Pos.data");
 
         Vector3d thisPos = new Vector3d(0,100,0);
 

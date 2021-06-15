@@ -1,8 +1,5 @@
 package game.player;
-import engine.network.BlockBreakingReceiver;
-import engine.network.BlockPlacingReceiver;
-import engine.network.ItemSendingObject;
-import engine.network.PlayerPosObject;
+import engine.network.*;
 
 import game.chunk.ChunkObject;
 import game.item.Item;
@@ -35,7 +32,7 @@ public class Player {
     public int ID;
     public int renderDistance = 5;
     public int itemRenderDistance = 15;
-    public Vector3d pos                  = loadPlayerPos();
+    public Vector3d pos                  = new Vector3d(0,100,0);
     public final float eyeHeight         = 1.5f;
     public final float collectionHeight  = 0.7f;
     public final Vector3f inertia        = new Vector3f(0,0,0);
@@ -86,7 +83,10 @@ public class Player {
         Player thisPlayer = new Player();
         thisPlayer.name = name;
         thisPlayer.ID = ID;
+        thisPlayer.pos = loadPlayerPos(name);
         players.put(ID,thisPlayer);
+
+        sendPlayerNetworkMovePositionDemand(ID, new NetworkMovePositionDemand(thisPlayer.pos));
     }
 
     public static Player getPlayerByID(int ID){

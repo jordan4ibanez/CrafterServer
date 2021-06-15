@@ -14,6 +14,7 @@ import org.joml.Vector3i;
 import java.io.*;
 import java.util.Objects;
 
+import static engine.disk.Disk.savePlayerPos;
 import static game.chunk.Chunk.*;
 import static game.player.Player.*;
 
@@ -54,6 +55,7 @@ public class Networking {
         kryo.register(ItemPickupNotification.class);
         kryo.register(ItemDeletionSender.class);
         kryo.register(BlockPlacingReceiver.class);
+        kryo.register(NetworkMovePositionDemand.class);
 
         server.start();
 
@@ -100,6 +102,7 @@ public class Networking {
 
                 if (Objects.requireNonNull(thisDisconnectingPlayer).name != null) {
                     System.out.println(thisDisconnectingPlayer.name + " has disconnected");
+                    savePlayerPos(thisDisconnectingPlayer.name, thisDisconnectingPlayer.pos);
                 } else {
                     System.out.println("SOMEONE DISCONNECTED WITH A BROKEN INTERNAL ID!");
                 }
@@ -145,5 +148,9 @@ public class Networking {
     public static void sendPlayerPosition(int ID, PlayerPosObject playerPosObject) {
         //System.out.println("sending position object to" + ID);
         server.sendToTCP(ID, playerPosObject);
+    }
+
+    public static void sendPlayerNetworkMovePositionDemand(int ID, NetworkMovePositionDemand networkMovePositionDemand){
+        server.sendToTCP(ID, networkMovePositionDemand);
     }
 }
