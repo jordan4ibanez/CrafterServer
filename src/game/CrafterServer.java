@@ -1,8 +1,6 @@
 package game;
 
-import game.item.ItemEntity;
 import game.player.Player;
-import game.tnt.TNTEntity;
 
 import static engine.Time.calculateDelta;
 import static engine.disk.Disk.*;
@@ -56,13 +54,14 @@ public class CrafterServer {
             initGame();
             createWorldsDir();
             updateWorldsPathToAvoidCrash();
-            startSaveThread();
             initializeNetworking();
 
             //server successfully initialized, output info
             outputServerText();
+            startSaveThread();
 
             System.out.println("SERVER IS RUNNING ON PORT: " + getGamePort());
+
             while (true) {
                 gameLoop();
             }

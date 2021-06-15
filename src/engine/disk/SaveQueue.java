@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.zip.GZIPOutputStream;
 
 import static game.CrafterServer.isGameShouldClose;
@@ -20,7 +21,7 @@ public class SaveQueue {
         currentActiveWorld = newWorld;
     }
 
-    private static final Deque<ChunkObject> saveQueue = new ArrayDeque<>();
+    public static ConcurrentLinkedDeque<ChunkObject> chunkSaveQueueDisk = new ConcurrentLinkedDeque<>();
 
     public static void startSaveThread(){
         new Thread(() -> {
@@ -29,14 +30,13 @@ public class SaveQueue {
             ChunkSavingObject savingObject;
 
             ChunkObject thisChunk;
-
             while(!isGameShouldClose()) {
-                if (!saveQueue.isEmpty()) {
+                if (!chunkSaveQueueDisk.isEmpty()) {
                     try {
 
-                        thisChunk = saveQueue.pop();
+                        thisChunk = (ChunkObject) chunkSaveQueueDisk.toArray()[0];
 
-                        System.out.println("saving chunk: " + thisChunk.x + " " + thisChunk.z);
+                        //System.out.println("saving chunk: " + thisChunk.x + " " + thisChunk.z);
 
                         savingObject = new ChunkSavingObject();
 
@@ -65,6 +65,8 @@ public class SaveQueue {
                         fos.close();
                         bais.close();
 
+                        chunkSaveQueueDisk.remove(thisChunk);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -74,7 +76,7 @@ public class SaveQueue {
     }
 
     public static void saveChunk(ChunkObject thisChunk){
-        saveQueue.add(thisChunk);
+        chunkSaveQueueDisk.add(thisChunk);
     }
 
     public static void instantSave(ChunkObject thisChunk){
