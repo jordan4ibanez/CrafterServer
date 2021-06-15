@@ -28,7 +28,6 @@ public class FancyMath {
         return Math.hypot((x1 - x2), Math.hypot((y1 - y2),(z1 - z2)));
     }
 
-
     public static double getDistance2D(double x1, double z1, double x2, double z2){
         return Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(z1-z2, 2));
     }

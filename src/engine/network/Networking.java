@@ -53,6 +53,7 @@ public class Networking {
         kryo.register(BreakBlockClassThing.class);
         kryo.register(Vector3i.class);
         kryo.register(BlockBreakingReceiver.class);
+        kryo.register(ItemSendingObject.class);
 
         server.start();
 
@@ -119,6 +120,10 @@ public class Networking {
 
     public static void sendPlayerBrokenBlockData(int ID, BlockBreakingReceiver blockBreakingReceiver){
         server.sendToTCP(ID, blockBreakingReceiver);
+    }
+
+    public static void sendPlayerItemData(int ID, ItemSendingObject itemSendingObject){
+        server.sendToTCP(ID, itemSendingObject);
     }
 
 
