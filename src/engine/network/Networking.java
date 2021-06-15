@@ -74,7 +74,7 @@ public class Networking {
                         connection.sendTCP(encodedHandshake);
                         addPlayer(encodedHandshake.name, connection.getID());
                         System.out.println("Connection ID: " + connection.getID());
-                        System.out.println(encodedHandshake.name + "has joined the server");
+                        System.out.println(encodedHandshake.name + " has joined the server");
                     } else {
                         connection.sendTCP(new NetworkHandshake());
                     }
