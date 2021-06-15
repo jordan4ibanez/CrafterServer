@@ -1,5 +1,6 @@
 package game.player;
 import engine.network.BlockBreakingReceiver;
+import engine.network.BlockPlacingReceiver;
 import engine.network.ItemSendingObject;
 import engine.network.PlayerPosObject;
 
@@ -60,6 +61,7 @@ public class Player {
 
     public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
     public ConcurrentHashMap<String, BlockBreakingReceiver> blockBreakingQueue = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, BlockPlacingReceiver> blockPlacingQueue = new ConcurrentHashMap<>();
 
     public Vector3d camPos = new Vector3d();
     public Vector3f camRot = new Vector3f();
@@ -211,6 +213,7 @@ public class Player {
         //mining will appear to lag very slightly if not
         for (Player thisPlayer : players.values()) {
             sendThisPlayerBrokenBlocks(thisPlayer);
+            sendThisPlayerPlacedBlocks(thisPlayer);
         }
     }
 
@@ -244,6 +247,14 @@ public class Player {
             BlockBreakingReceiver thisQueue = thisPlayer.blockBreakingQueue.elements().nextElement();
             sendPlayerBrokenBlockData(thisPlayer.ID, thisQueue);
             thisPlayer.blockBreakingQueue.remove(thisQueue.receivedPos.x + " " + thisQueue.receivedPos.y + " " + thisQueue.receivedPos.z);
+        }
+    }
+
+    private static void sendThisPlayerPlacedBlocks(Player thisPlayer){
+        if (thisPlayer.blockPlacingQueue.size() > 0){
+            BlockPlacingReceiver thisQueue = thisPlayer.blockPlacingQueue.elements().nextElement();
+            sendPlayerPlacedBlockData(thisPlayer.ID, thisQueue);
+            thisPlayer.blockPlacingQueue.remove(thisQueue.receivedPos.x + " " + thisQueue.receivedPos.y + " " + thisQueue.receivedPos.z);
         }
     }
 

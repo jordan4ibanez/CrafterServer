@@ -14,8 +14,7 @@ import org.joml.Vector3i;
 import java.io.*;
 import java.util.Objects;
 
-import static game.chunk.Chunk.digBlock;
-import static game.chunk.Chunk.genBiome;
+import static game.chunk.Chunk.*;
 import static game.player.Player.*;
 
 public class Networking {
@@ -54,6 +53,7 @@ public class Networking {
         kryo.register(ItemSendingObject.class);
         kryo.register(ItemPickupNotification.class);
         kryo.register(ItemDeletionSender.class);
+        kryo.register(BlockPlacingReceiver.class);
 
         server.start();
 
@@ -87,6 +87,9 @@ public class Networking {
                     thisPlayer.camRot = playerPosObject.cameraRot;
                 } else if (object instanceof BreakBlockClassThing breakBlockClassThing){
                     digBlock(breakBlockClassThing.breakingPos.x, breakBlockClassThing.breakingPos.y, breakBlockClassThing.breakingPos.z);
+                } else if (object instanceof BlockPlacingReceiver blockPlacingReceiver){
+                    Vector3i c = blockPlacingReceiver.receivedPos;
+                    placeBlock(c.x, c.y, c.z, blockPlacingReceiver.ID, blockPlacingReceiver.rotation);
                 }
             }
 
@@ -121,6 +124,10 @@ public class Networking {
 
     public static void sendPlayerBrokenBlockData(int ID, BlockBreakingReceiver blockBreakingReceiver){
         server.sendToTCP(ID, blockBreakingReceiver);
+    }
+
+    public static void sendPlayerPlacedBlockData(int ID, BlockPlacingReceiver blockPlacingReceiver){
+        server.sendToTCP(ID, blockPlacingReceiver);
     }
 
     public static void sendPlayerItemData(int ID, ItemSendingObject itemSendingObject){

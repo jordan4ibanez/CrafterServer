@@ -2,6 +2,7 @@ package game.chunk;
 
 import engine.FastNoise;
 import engine.network.BlockBreakingReceiver;
+import engine.network.BlockPlacingReceiver;
 import game.player.Player;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
@@ -19,6 +20,7 @@ import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.instantSave;
 import static engine.disk.SaveQueue.saveChunk;
 import static game.blocks.BlockDefinition.onDigCall;
+import static game.blocks.BlockDefinition.onPlaceCall;
 import static game.chunk.ChunkMath.posToIndex;
 import static game.chunk.ChunkUpdateHandler.chunkUpdate;
 import static game.light.Light.*;
@@ -327,6 +329,18 @@ public class Chunk {
         }
         lightFloodFill(x, y, z);
         thisChunk.modified = true;
+
+        onPlaceCall(ID, new Vector3d(x,y,z));
+
+        addPlacedBlockToPlayersQueue(chunkX,chunkZ,x,y,z, ID, (byte)rot);
+    }
+
+    private static void addPlacedBlockToPlayersQueue(int chunkX, int chunkZ, int x, int y, int z, int ID, byte rotation){
+        for (Player thisPlayer : getAllPlayers()){
+            if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
+                thisPlayer.blockPlacingQueue.put(x + " " + y + " " + z, new BlockPlacingReceiver(new Vector3i(x,y,z), ID, rotation));
+            }
+        }
     }
 
     public static byte getLight(int x,int y,int z){
