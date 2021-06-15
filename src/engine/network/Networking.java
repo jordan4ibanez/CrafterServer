@@ -34,8 +34,6 @@ public class Networking {
 
     public static void initializeNetworking(){
 
-
-
         Kryo kryo = server.getKryo();
 
         kryo.reset();
@@ -55,6 +53,7 @@ public class Networking {
         kryo.register(BlockBreakingReceiver.class);
         kryo.register(ItemSendingObject.class);
         kryo.register(ItemPickupNotification.class);
+        kryo.register(ItemDeletionSender.class);
 
         server.start();
 
@@ -132,6 +131,9 @@ public class Networking {
         server.sendToTCP(ID, itemPickupNotification);
     }
 
+    public static void sendPlayerItemDeletionSender(int ID, ItemDeletionSender itemDeletionSender){
+        server.sendToTCP(ID, itemDeletionSender);
+    }
 
     public static void sendPlayerPosition(int ID, PlayerPosObject playerPosObject) {
         //System.out.println("sending position object to" + ID);

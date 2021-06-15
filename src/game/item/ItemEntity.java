@@ -1,5 +1,6 @@
 package game.item;
 
+import engine.network.ItemDeletionSender;
 import engine.network.ItemPickupNotification;
 import game.player.Player;
 import org.joml.Vector3d;
@@ -10,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.FancyMath.getDistance;
 import static engine.Time.getDelta;
+import static engine.network.Networking.sendPlayerItemDeletionSender;
 import static engine.network.Networking.sendPlayerPickupNotification;
 import static game.collision.Collision.applyInertia;
 import static game.item.Item.getCurrentID;
@@ -109,6 +111,10 @@ public class ItemEntity {
         while (!deletionQueue.isEmpty()){
             int thisItemKey = deletionQueue.pop();
             items.remove(thisItemKey);
+
+            for (Player thisPlayer : getAllPlayers()){
+                sendPlayerItemDeletionSender(thisPlayer.ID, new ItemDeletionSender(thisItemKey));
+            }
         }
     }
 }
