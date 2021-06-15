@@ -126,7 +126,7 @@ public class Player {
                 if (thisChunk != null){
                     sendPlayerChunkData(thisPlayer.ID, thisChunk);
 
-                    System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
+                    //System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
 
                     //remove all equal clones
                     for (String thisUpdate : thisPlayer.chunkLoadingQueue.values()){

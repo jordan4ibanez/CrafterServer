@@ -20,7 +20,7 @@ public class SaveQueue {
         currentActiveWorld = newWorld;
     }
 
-    public static Deque<ChunkObject> saveQueue;
+    private static final Deque<ChunkObject> saveQueue = new ArrayDeque<>();
 
     public static void startSaveThread(){
         new Thread(() -> {
@@ -30,12 +30,13 @@ public class SaveQueue {
 
             ChunkObject thisChunk;
 
-            saveQueue = new ArrayDeque<>();
-
             while(!isGameShouldClose()) {
                 if (!saveQueue.isEmpty()) {
                     try {
+
                         thisChunk = saveQueue.pop();
+
+                        System.out.println("saving chunk: " + thisChunk.x + " " + thisChunk.z);
 
                         savingObject = new ChunkSavingObject();
 
