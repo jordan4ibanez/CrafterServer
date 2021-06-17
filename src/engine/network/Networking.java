@@ -30,7 +30,7 @@ public class Networking {
         return port;
     }
 
-    private static final Server server = new Server(10_000_000,10_000_000);
+    private static final Server server = new Server(20_000_000,20_000_000);
 
     public static void initializeNetworking(){
 
