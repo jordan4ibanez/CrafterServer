@@ -6,12 +6,9 @@ public class ChunkSavingObject {
     public int x;
     public int z;
 
-    public byte e;
-
     public int [] b;
     public byte[] r;
     public byte[] l;
+    public byte[] t;
     public byte[][] h;
-
-    public boolean m = false;
 }
