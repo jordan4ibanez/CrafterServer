@@ -6,8 +6,6 @@ import game.chunk.ChunkObject;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.zip.GZIPOutputStream;
 
@@ -45,7 +43,7 @@ public class SaveQueue {
                         savingObject.z = thisChunk.z;
                         savingObject.b = thisChunk.block;
                         savingObject.r = thisChunk.rotation;
-                        savingObject.l = thisChunk.light;
+                        savingObject.l = thisChunk.naturalLight;
                         savingObject.h = thisChunk.heightMap;
                         savingObject.e = thisChunk.lightLevel;
 
@@ -89,7 +87,7 @@ public class SaveQueue {
             savingObject.z = thisChunk.z;
             savingObject.b = thisChunk.block;
             savingObject.r = thisChunk.rotation;
-            savingObject.l = thisChunk.light;
+            savingObject.l = thisChunk.naturalLight;
             savingObject.h = thisChunk.heightMap;
             savingObject.e = thisChunk.lightLevel;
 

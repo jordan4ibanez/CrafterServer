@@ -119,7 +119,7 @@ public class Networking {
         savingObject.z = thisChunk.z;
         savingObject.b = thisChunk.block;
         savingObject.r = thisChunk.rotation;
-        savingObject.l = thisChunk.light;
+        savingObject.l = thisChunk.naturalLight;
         savingObject.h = thisChunk.heightMap;
         savingObject.e = thisChunk.lightLevel;
         server.sendToTCP(ID, savingObject);
