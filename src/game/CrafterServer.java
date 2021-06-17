@@ -23,7 +23,7 @@ public class CrafterServer {
     boolean done = false;
 
     //fields
-    private static final String versionName = "Crafter 0.04a Survival Test";
+    private static final String versionName = "Crafter 0.04b Survival Test";
 
     public static String getVersionName(){
         return versionName;
