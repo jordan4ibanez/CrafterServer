@@ -63,7 +63,7 @@ public class Networking {
             server.bind(port);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("AKA: THERE'S ALREADY A SERVER ON THIS PORT BOI");
+            System.out.println("THIS ERROR IS BECAUSE THERE IS ALREADY A SERVER RUNNING ON THIS PORT!");
         }
 
 
