@@ -30,7 +30,7 @@ public class Networking {
         return port;
     }
 
-    private static final Server server = new Server(20_000_000,20_000_000);
+    private static final Server server = new Server(1_000_000,1_000_000);
 
     public static void initializeNetworking(){
 
@@ -41,8 +41,6 @@ public class Networking {
         kryo.register(NetworkHandshake.class);
         kryo.register(PlayerPosObject.class);
         kryo.register(ChunkRequest.class);
-        kryo.register(ChunkObject.class);
-        kryo.register(ChunkSavingObject.class);
         kryo.register(int[].class);
         kryo.register(byte[][].class);
         kryo.register(byte[].class);
@@ -57,6 +55,14 @@ public class Networking {
         kryo.register(BlockPlacingReceiver.class);
         kryo.register(NetworkMovePositionDemand.class);
 
+        kryo.register(CDB.class);
+        kryo.register(CDC.class);
+        kryo.register(CDH.class);
+        kryo.register(CDN.class);
+        kryo.register(CDQ.class);
+        kryo.register(CDR.class);
+        kryo.register(CDT.class);
+
         server.start();
 
         try {
@@ -65,7 +71,6 @@ public class Networking {
             e.printStackTrace();
             System.out.println("THIS ERROR IS BECAUSE THERE IS ALREADY A SERVER RUNNING ON THIS PORT!");
         }
-
 
         server.addListener(new Listener() {
             public void received (Connection connection, Object object) {
@@ -113,16 +118,27 @@ public class Networking {
     }
 
     public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) {
-        ChunkSavingObject savingObject = new ChunkSavingObject();
-        savingObject.I = thisChunk.ID;
-        savingObject.x = thisChunk.x;
-        savingObject.z = thisChunk.z;
-        savingObject.b = thisChunk.block;
-        savingObject.r = thisChunk.rotation;
-        savingObject.l = thisChunk.naturalLight;
-        savingObject.t = thisChunk.torchLight;
-        savingObject.h = thisChunk.heightMap;
-        server.sendToTCP(ID, savingObject);
+
+        //send initial lock on
+        server.sendToTCP(ID, new CDQ(thisChunk.x, thisChunk.z));
+
+        //send block data
+        server.sendToTCP(ID, new CDB(thisChunk.block));
+
+        //send block rotations data
+        server.sendToTCP(ID, new CDR(thisChunk.rotation));
+
+        //send natural light data
+        server.sendToTCP(ID, new CDN(thisChunk.naturalLight));
+
+        //send torch light data
+        server.sendToTCP(ID, new CDT(thisChunk.torchLight));
+
+        //send heightmap data
+        server.sendToTCP(ID, new CDH(thisChunk.heightMap));
+
+        //transaction complete
+        server.sendToTCP(ID, new CDC());
     }
 
     public static void sendPlayerBrokenBlockData(int ID, BlockBreakingReceiver blockBreakingReceiver){

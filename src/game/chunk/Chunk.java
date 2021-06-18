@@ -69,15 +69,12 @@ public class Chunk {
     public static void testLightCycleFlood(){
         byte currentLightLevel = getCurrentGlobalLightLevel();
         for (ChunkObject thisChunk : map.values()){
-            if (thisChunk.lightLevel != currentLightLevel){
-                floodChunkWithNewGlobalLight(thisChunk, thisChunk.lightLevel, currentLightLevel);
-                thisChunk.lightLevel = currentLightLevel;
-            }
+            floodChunkWithNewGlobalLight(thisChunk, currentLightLevel);
         }
     }
 
     //this is for testing the day/night cycle
-    private static void floodChunkWithNewGlobalLight(ChunkObject thisChunk, byte oldLight, byte newLight){
+    private static void floodChunkWithNewGlobalLight(ChunkObject thisChunk, byte newLight){
 
         /* this causes SERIOUS lag
         Vector3i thisPos = indexToPos(i);
@@ -94,7 +91,6 @@ public class Chunk {
         }
          */
         Arrays.fill(thisChunk.naturalLight, newLight);
-
     }
 
     public static void globalFinalChunkSaveToDisk(){
