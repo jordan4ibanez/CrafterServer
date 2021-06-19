@@ -55,6 +55,7 @@ public class Networking {
         kryo.register(ItemDeletionSender.class);
         kryo.register(NetworkMovePositionDemand.class);
         kryo.register(NetChunk.class);
+        kryo.register(HotBarSlotUpdate.class);
 
         server.start();
 
@@ -89,8 +90,11 @@ public class Networking {
                 } else if (object instanceof BlockPlaceUpdate blockPlaceUpdate){
                     Vector3i c = blockPlaceUpdate.pos;
                     placeBlock(c.x, c.y, c.z, blockPlaceUpdate.ID, blockPlaceUpdate.rot);
-                } else {
-                    System.out.println(object.getClass().toString());
+                } else if (object instanceof HotBarSlotUpdate hotBarSlotUpdate){
+                    Player thisPlayer = getPlayerByID(connection.getID());
+                    if (thisPlayer != null) {
+                        thisPlayer.hotBarSlot = hotBarSlotUpdate.slot;
+                    }
                 }
             }
 
@@ -137,7 +141,6 @@ public class Networking {
     }
 
     public static void sendPlayerPosition(int ID, PlayerPosObject playerPosObject) {
-        //System.out.println("sending position object to" + ID);
         server.sendToTCP(ID, playerPosObject);
     }
 

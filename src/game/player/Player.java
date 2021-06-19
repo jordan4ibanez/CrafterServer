@@ -34,6 +34,7 @@ public class Player {
     public int renderDistance = 5;
     public int itemRenderDistance = 15;
     public Vector3d pos                  = new Vector3d(0,100,0);
+    public int hotBarSlot = 0;
     public final float eyeHeight         = 1.5f;
     public final float collectionHeight  = 0.7f;
     public final Vector3f inertia        = new Vector3f(0,0,0);
