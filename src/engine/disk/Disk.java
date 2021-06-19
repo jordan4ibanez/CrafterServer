@@ -126,32 +126,34 @@ public class Disk {
         //System.out.println(test.toString());
 
 
+        //byte[] test2 = new byte[55];
+        //ByteArrayInputStream bis = new ByteArrayInputStream(test2);
+
         //learned from https://www.journaldev.com/966/java-gzip-example-compress-decompress-file
-        ByteArrayOutputStream bais;
+        ByteArrayOutputStream byteArrayOutputStream;
         try {
-            FileInputStream fis = new FileInputStream(dir);
-            GZIPInputStream gis = new GZIPInputStream(fis);
+            FileInputStream fileInputStream = new FileInputStream(dir);
+            GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream);
             byte[] buffer = new byte[4096];
             int len;
-            bais = new ByteArrayOutputStream();
-            while((len = gis.read(buffer)) != -1){
-                bais.write(buffer, 0, len);
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            while((len = gzipInputStream.read(buffer)) != -1){
+                byteArrayOutputStream.write(buffer, 0, len);
             }
             //close resources
-            gis.close();
+            gzipInputStream.close();
         } catch (IOException e) {
-            //e.printStackTrace();
-            //System.out.println("ERROR AT 144");
+            //System.out.println("ERROR IN loadChunkFromDisk!");
             return null;
         }
 
         try {
-            thisChunkLoaded = objectMapper.readValue(bais.toString(), ChunkSavingObject.class);
+            thisChunkLoaded = objectMapper.readValue(byteArrayOutputStream.toString(), ChunkSavingObject.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        bais.close();
+        byteArrayOutputStream.close();
 
         if (thisChunkLoaded == null){
             return null;

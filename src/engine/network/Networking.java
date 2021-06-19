@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import engine.disk.ChunkSavingObject;
 import game.chunk.ChunkObject;
 import game.player.Player;
@@ -13,6 +14,7 @@ import org.joml.Vector3i;
 
 import java.io.*;
 import java.util.Objects;
+import java.util.zip.GZIPOutputStream;
 
 import static engine.disk.Disk.savePlayerPos;
 import static game.chunk.Chunk.*;
@@ -21,6 +23,8 @@ import static game.player.Player.*;
 public class Networking {
 
     private static int port = 30_150;
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void setPort(int newPort){
         port = newPort;
@@ -54,14 +58,7 @@ public class Networking {
         kryo.register(ItemDeletionSender.class);
         kryo.register(BlockPlacingReceiver.class);
         kryo.register(NetworkMovePositionDemand.class);
-
-        kryo.register(CDB.class);
-        kryo.register(CDC.class);
-        kryo.register(CDH.class);
-        kryo.register(CDN.class);
-        kryo.register(CDQ.class);
-        kryo.register(CDR.class);
-        kryo.register(CDT.class);
+        kryo.register(NetChunk.class);
 
         server.start();
 
@@ -117,28 +114,49 @@ public class Networking {
         });
     }
 
-    public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) {
+    public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) throws IOException {
 
-        //send initial lock on
-        server.sendToTCP(ID, new CDQ(thisChunk.x, thisChunk.z));
+        //this is compressed into bytes, then serialized by Kryo, then sent out to client by Kryonet
 
-        //send block data
-        server.sendToTCP(ID, new CDB(thisChunk.block));
+        ChunkSavingObject savingObject = new ChunkSavingObject();
 
-        //send block rotations data
-        server.sendToTCP(ID, new CDR(thisChunk.rotation));
+        savingObject.I = thisChunk.ID;
+        savingObject.x = thisChunk.x;
+        savingObject.z = thisChunk.z;
+        savingObject.b = thisChunk.block;
+        savingObject.r = thisChunk.rotation;
+        savingObject.l = thisChunk.naturalLight;
+        savingObject.t = thisChunk.torchLight;
+        savingObject.h = thisChunk.heightMap;
 
-        //send natural light data
-        server.sendToTCP(ID, new CDN(thisChunk.naturalLight));
+        String stringedChunk = mapper.writeValueAsString(savingObject);
 
-        //send torch light data
-        server.sendToTCP(ID, new CDT(thisChunk.torchLight));
+        //data byte conversions
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(stringedChunk.getBytes());
 
-        //send heightmap data
-        server.sendToTCP(ID, new CDH(thisChunk.heightMap));
 
-        //transaction complete
-        server.sendToTCP(ID, new CDC());
+        //compression data stream
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
+
+        byte[] buffer = new byte[4096];
+        int len;
+        while((len=byteArrayInputStream.read(buffer)) != -1){
+            gzipOutputStream.write(buffer, 0, len);
+        }
+
+        //close resources
+        //this needs to be before the final send
+        //this is because the final pieces of data are written
+        //when you close them
+        gzipOutputStream.close();
+        byteArrayOutputStream.close();
+        byteArrayInputStream.close();
+
+        server.sendToTCP(ID, new NetChunk(byteArrayOutputStream.toByteArray()));
+
+
+
     }
 
     public static void sendPlayerBrokenBlockData(int ID, BlockBreakingReceiver blockBreakingReceiver){

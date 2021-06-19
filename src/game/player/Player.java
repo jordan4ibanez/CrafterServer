@@ -7,6 +7,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -111,7 +112,7 @@ public class Player {
         players.remove(ID);
     }
 
-    public static void indexAndLoadQueuedChunksForEachPlayer(){
+    public static void indexAndLoadQueuedChunksForEachPlayer() throws IOException {
         for (Player thisPlayer : players.values()){
             if (thisPlayer.chunkLoadingQueue.size() > 0){
 
