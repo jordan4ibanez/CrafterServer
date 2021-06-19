@@ -5,7 +5,7 @@ import org.joml.Vector2d;
 import org.joml.Vector2i;
 
 public class InventoryObject {
-    String[][] inventory;
+    public String[][] inventory;
 
     String name;
     Vector2i size;

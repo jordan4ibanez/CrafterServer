@@ -2,6 +2,8 @@ package engine;
 
 import org.joml.Vector2d;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
+
 import java.util.Random;
 
 public class FancyMath {
@@ -34,6 +36,15 @@ public class FancyMath {
 
     public static double getDistance2D(Vector2d pos1, Vector2d pos2){
         return Math.sqrt(Math.pow(pos1.x-pos2.x, 2) + Math.pow(pos1.y-pos2.y, 2));
+    }
+
+    public static Vector3f getCameraRotationVector(Vector3f camRot){
+        Vector3f rotationVector = new Vector3f();
+        float xzLen = (float)Math.cos(Math.toRadians(camRot.x + 180f));
+        rotationVector.z = xzLen * (float)Math.cos(Math.toRadians(camRot.y));
+        rotationVector.y = (float)Math.sin(Math.toRadians(camRot.x + 180f));
+        rotationVector.x = xzLen * (float)Math.sin(Math.toRadians(-camRot.y));
+        return rotationVector;
     }
 
 }

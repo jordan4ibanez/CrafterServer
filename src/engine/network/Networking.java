@@ -11,11 +11,14 @@ import game.player.Player;
 import org.joml.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
+import static engine.FancyMath.getCameraRotationVector;
 import static engine.compression.Compression.convertChunkToCompressedByteArray;
 import static engine.disk.Disk.savePlayerPos;
 import static game.chunk.Chunk.*;
+import static game.item.ItemEntity.createItem;
 import static game.player.Player.*;
 
 public class Networking {
@@ -60,6 +63,7 @@ public class Networking {
         kryo.register(NetChunk.class,108);
         kryo.register(HotBarSlotUpdate.class,109);
         kryo.register(NetworkInventory.class,110);
+        kryo.register(ThrowItemUpdate.class, 111);
 
         server.start();
 
@@ -105,8 +109,7 @@ public class Networking {
                         if (thisPlayer.mainInventory == null){
                             thisPlayer.mainInventory = new InventoryObject("main", 9,4, true);
                         }
-                        //System.out.println(thisPlayer.name + " updated their inventory!");
-                        //thisPlayer.updatePlayerInventory();
+                        System.out.println(thisPlayer.name + " updated their inventory!");
                         InventoryObject thisInv = thisPlayer.mainInventory;
 
                         for (int x = 0; x < networkInventory.inventory.length; x++){
@@ -114,6 +117,23 @@ public class Networking {
                                 thisInv.set(x,y,new Item(networkInventory.inventory[x][y], 1));
                             }
                         }
+                    }
+                } else if (object instanceof ThrowItemUpdate){
+                    //System.out.println("new item thrown!");
+                    Player thisPlayer = getPlayerByID(connection.getID());
+                    if (thisPlayer != null) {
+                        String itemName = thisPlayer.mainInventory.get(thisPlayer.hotBarSlot, 0);
+                        if (itemName == null){
+                            System.out.println(thisPlayer.name + " IS THROWING A NULL ITEM!");
+                            return;
+                        }
+                        Vector3d pos = new Vector3d(thisPlayer.pos);
+                        pos.y += thisPlayer.eyeHeight;
+
+                        //System.out.println(Arrays.deepToString(thisPlayer.mainInventory.inventory));
+
+                        //System.out.println("player is throwing: " + itemName);
+                        createItem(itemName, pos, getCameraRotationVector(new Vector3f(thisPlayer.camRot)).mul(10f), 1);
                     }
                 }
             }
