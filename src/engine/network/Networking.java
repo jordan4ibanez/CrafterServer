@@ -34,7 +34,7 @@ public class Networking {
         return port;
     }
 
-    private static final Server server = new Server(1_000_000,1_000_000);
+    private static final Server server = new Server(50_000,50_000);
 
     public static void initializeNetworking(){
 
