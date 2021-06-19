@@ -58,8 +58,8 @@ public class Player {
     public Vector3d oldRealPos = new Vector3d(0,0,0);
 
     public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String, BlockBreakingReceiver> blockBreakingQueue = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String, BlockPlacingReceiver> blockPlacingQueue = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, BlockBreakUpdate> blockBreakingQueue = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, BlockPlaceUpdate> blockPlacingQueue = new ConcurrentHashMap<>();
 
     public Vector3d camPos = new Vector3d();
     public Vector3f camRot = new Vector3f();
@@ -245,17 +245,17 @@ public class Player {
 
     private static void sendThisPlayerBrokenBlocks(Player thisPlayer){
         if (thisPlayer.blockBreakingQueue.size() > 0) {
-            BlockBreakingReceiver thisQueue = thisPlayer.blockBreakingQueue.elements().nextElement();
+            BlockBreakUpdate thisQueue = thisPlayer.blockBreakingQueue.elements().nextElement();
             sendPlayerBrokenBlockData(thisPlayer.ID, thisQueue);
-            thisPlayer.blockBreakingQueue.remove(thisQueue.receivedPos.x + " " + thisQueue.receivedPos.y + " " + thisQueue.receivedPos.z);
+            thisPlayer.blockBreakingQueue.remove(thisQueue.pos.x + " " + thisQueue.pos.y + " " + thisQueue.pos.z);
         }
     }
 
     private static void sendThisPlayerPlacedBlocks(Player thisPlayer){
         if (thisPlayer.blockPlacingQueue.size() > 0){
-            BlockPlacingReceiver thisQueue = thisPlayer.blockPlacingQueue.elements().nextElement();
+            BlockPlaceUpdate thisQueue = thisPlayer.blockPlacingQueue.elements().nextElement();
             sendPlayerPlacedBlockData(thisPlayer.ID, thisQueue);
-            thisPlayer.blockPlacingQueue.remove(thisQueue.receivedPos.x + " " + thisQueue.receivedPos.y + " " + thisQueue.receivedPos.z);
+            thisPlayer.blockPlacingQueue.remove(thisQueue.pos.x + " " + thisQueue.pos.y + " " + thisQueue.pos.z);
         }
     }
 
