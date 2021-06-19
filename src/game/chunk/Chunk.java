@@ -273,7 +273,9 @@ public class Chunk {
         if (thisChunk.block == null){
             return;
         }
+
         int oldBlock = thisChunk.block[posToIndex(blockX, y, blockZ)];
+
         thisChunk.block[posToIndex(blockX, y, blockZ)] = 0;
         thisChunk.rotation[posToIndex(blockX, y, blockZ)] = 0;
         if (thisChunk.heightMap[blockX][blockZ] == y){
@@ -327,9 +329,9 @@ public class Chunk {
         lightFloodFill(x, y, z);
         thisChunk.modified = true;
 
-        onPlaceCall(ID, new Vector3d(x,y,z));
-
         addPlacedBlockToPlayersQueue(chunkX,chunkZ,x,y,z, ID, (byte)rot);
+
+        onPlaceCall(ID, new Vector3d(x,y,z));
     }
 
     private static void addPlacedBlockToPlayersQueue(int chunkX, int chunkZ, int x, int y, int z, int ID, byte rotation){
