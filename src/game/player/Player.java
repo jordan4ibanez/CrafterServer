@@ -38,25 +38,15 @@ public class Player {
     public final float eyeHeight         = 1.5f;
     public final float collectionHeight  = 0.7f;
     public final Vector3f inertia        = new Vector3f(0,0,0);
-    public final float height            = 1.9f;
-    public final float width             = 0.3f;
     public boolean mining                = false;
     public boolean placing               = false;
-    public float placeTimer              = 0;
     public String name;
-    public int currentInventorySelection = 0;
-    public int oldInventorySelection = 0;
     public Vector3i oldWorldSelectionPos = new Vector3i();
     public Vector3i worldSelectionPos    = new Vector3i();
     public final Vector3i currentChunk = new Vector3i((int)Math.floor(pos.x / 16f),0,(int)Math.floor(pos.z / 16f));
     public static int oldY = 0;
-    public final float reach = 3.575f;
     public boolean sneaking              = false;
     public boolean running               = false;
-    public float lightCheckTimer = 0f;
-    public byte lightLevel = 0;
-    public Vector3i oldPos = new Vector3i(0,0,0);
-    public Vector3d oldRealPos = new Vector3d(0,0,0);
 
     public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
     public ConcurrentHashMap<String, BlockBreakUpdate> blockBreakingQueue = new ConcurrentHashMap<>();
@@ -64,19 +54,7 @@ public class Player {
 
     public Vector3d camPos = new Vector3d();
     public Vector3f camRot = new Vector3f();
-
-    //block hardness cache
-    public float stoneHardness = 0f;
-    public float dirtHardness = 0f;
-    public float woodHardness = 0f;
-    public float leafHardness = 0f;
-
-    //tool mining level cache
-    public float stoneMiningLevel = 0.3f;
-    public float dirtMiningLevel = 1f;
-    public float woodMiningLevel = 1f;
-    public float leafMiningLevel = 1f;
-
+    
 
 
 
