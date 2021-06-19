@@ -30,7 +30,7 @@ public class Networking {
         return port;
     }
 
-    private static final Server server = new Server(500_000,500_000);
+    private static final Server server = new Server(500000_000,500000_000);
 
     public static void initializeNetworking(){
 
@@ -39,26 +39,27 @@ public class Networking {
 
         //register classes to be serialized
         //DO PRIMITIVE CLASS FIRST!
-        kryo.register(int[].class);
-        kryo.register(byte[][].class);
-        kryo.register(byte[].class);
-        kryo.register(String[].class);
-        kryo.register(String[][].class);
-        kryo.register(Vector3d.class);
-        kryo.register(Vector3f.class);
-        kryo.register(Vector3i.class);
-        kryo.register(NetworkHandshake.class);
-        kryo.register(PlayerPosObject.class);
-        kryo.register(ChunkRequest.class);
-        kryo.register(BlockBreakUpdate.class);
-        kryo.register(BlockPlaceUpdate.class);
-        kryo.register(ItemSendingObject.class);
-        kryo.register(ItemPickupNotification.class);
-        kryo.register(ItemDeletionSender.class);
-        kryo.register(NetworkMovePositionDemand.class);
-        kryo.register(NetChunk.class);
-        kryo.register(HotBarSlotUpdate.class);
-        kryo.register(NetworkInventory.class);
+        kryo.register(int[].class, 90);
+        kryo.register(byte[][].class,91);
+        kryo.register(byte[].class,92);
+        kryo.register(String.class,93);
+        kryo.register(String[].class,94);
+        kryo.register(String[][].class,95);
+        kryo.register(Vector3d.class,96);
+        kryo.register(Vector3f.class,97);
+        kryo.register(Vector3i.class,98);
+        kryo.register(NetworkHandshake.class,99);
+        kryo.register(PlayerPosObject.class,100);
+        kryo.register(ChunkRequest.class,101);
+        kryo.register(BlockBreakUpdate.class,102);
+        kryo.register(BlockPlaceUpdate.class,103);
+        kryo.register(ItemSendingObject.class,104);
+        kryo.register(ItemPickupNotification.class,105);
+        kryo.register(ItemDeletionSender.class,106);
+        kryo.register(NetworkMovePositionDemand.class,107);
+        kryo.register(NetChunk.class,108);
+        kryo.register(HotBarSlotUpdate.class,109);
+        kryo.register(NetworkInventory.class,110);
 
         server.start();
 
@@ -98,18 +99,19 @@ public class Networking {
                     if (thisPlayer != null) {
                         thisPlayer.hotBarSlot = hotBarSlotUpdate.slot;
                     }
-                } else if (object instanceof InventoryObject inventoryObject){
-                    Player thisPlayer = getPlayerByID(connection.getID());
-                    if (thisPlayer != null) {
-                        System.out.println(thisPlayer.name + " updated their inventory!");
-                        thisPlayer.updatePlayerInventory(inventoryObject);
-                    }
                 } else if (object instanceof NetworkInventory networkInventory){
                     Player thisPlayer = getPlayerByID(connection.getID());
                     if (thisPlayer != null) {
+                        if (thisPlayer.mainInventory == null){
+                            thisPlayer.mainInventory = new InventoryObject("main", 9,4, true);
+                        }
+                        //System.out.println(thisPlayer.name + " updated their inventory!");
+                        //thisPlayer.updatePlayerInventory();
+                        InventoryObject thisInv = thisPlayer.mainInventory;
+
                         for (int x = 0; x < networkInventory.inventory.length; x++){
                             for (int y = 0; y < networkInventory.inventory[x].length; y++){
-                                thisPlayer.mainInventory.set(x,y,new Item(networkInventory.inventory[x][y], 1));
+                                thisInv.set(x,y,new Item(networkInventory.inventory[x][y], 1));
                             }
                         }
                     }
