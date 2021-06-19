@@ -16,6 +16,7 @@ import java.io.*;
 import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
 
+import static engine.compression.Compression.convertChunkToCompressedByteArray;
 import static engine.disk.Disk.savePlayerPos;
 import static game.chunk.Chunk.*;
 import static game.player.Player.*;
@@ -115,48 +116,8 @@ public class Networking {
     }
 
     public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) throws IOException {
-
-        //this is compressed into bytes, then serialized by Kryo, then sent out to client by Kryonet
-
-        ChunkSavingObject savingObject = new ChunkSavingObject();
-
-        savingObject.I = thisChunk.ID;
-        savingObject.x = thisChunk.x;
-        savingObject.z = thisChunk.z;
-        savingObject.b = thisChunk.block;
-        savingObject.r = thisChunk.rotation;
-        savingObject.l = thisChunk.naturalLight;
-        savingObject.t = thisChunk.torchLight;
-        savingObject.h = thisChunk.heightMap;
-
-        String stringedChunk = mapper.writeValueAsString(savingObject);
-
-        //data byte conversions
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(stringedChunk.getBytes());
-
-
-        //compression data stream
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
-
-        byte[] buffer = new byte[4096];
-        int len;
-        while((len=byteArrayInputStream.read(buffer)) != -1){
-            gzipOutputStream.write(buffer, 0, len);
-        }
-
-        //close resources
-        //this needs to be before the final send
-        //this is because the final pieces of data are written
-        //when you close them
-        gzipOutputStream.close();
-        byteArrayOutputStream.close();
-        byteArrayInputStream.close();
-
-        server.sendToTCP(ID, new NetChunk(byteArrayOutputStream.toByteArray()));
-
-
-
+        //this is compressed by this method, then serialized by Kryo, then sent out to client by Kryonet to be reassembled
+        server.sendToTCP(ID, new NetChunk(convertChunkToCompressedByteArray(thisChunk)));
     }
 
     public static void sendPlayerBrokenBlockData(int ID, BlockBreakingReceiver blockBreakingReceiver){
