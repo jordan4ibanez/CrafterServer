@@ -2,6 +2,7 @@ package game.player;
 import engine.network.*;
 
 import game.chunk.ChunkObject;
+import game.crafting.InventoryObject;
 import game.item.Item;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -29,6 +30,7 @@ public class Player {
         return new ArrayList<>(players.values());
     }
 
+    public InventoryObject mainInventory = null; //try to load this eventually
     public int health = 20;
     public int ID;
     public int renderDistance = 5;
@@ -54,9 +56,14 @@ public class Player {
 
     public Vector3d camPos = new Vector3d();
     public Vector3f camRot = new Vector3f();
-    
 
 
+
+
+    public void updatePlayerInventory(InventoryObject newInventory){
+        this.mainInventory = null; //throw it to the GC
+        this.mainInventory = newInventory;
+    }
 
 
     public static void addPlayer(String name, int ID){

@@ -5,10 +5,10 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import game.chunk.ChunkObject;
+import game.crafting.InventoryObject;
+import game.item.Item;
 import game.player.Player;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
+import org.joml.*;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public class Networking {
         return port;
     }
 
-    private static final Server server = new Server(50_000,50_000);
+    private static final Server server = new Server(500_000,500_000);
 
     public static void initializeNetworking(){
 
@@ -42,6 +42,8 @@ public class Networking {
         kryo.register(int[].class);
         kryo.register(byte[][].class);
         kryo.register(byte[].class);
+        kryo.register(String[].class);
+        kryo.register(String[][].class);
         kryo.register(Vector3d.class);
         kryo.register(Vector3f.class);
         kryo.register(Vector3i.class);
@@ -56,6 +58,7 @@ public class Networking {
         kryo.register(NetworkMovePositionDemand.class);
         kryo.register(NetChunk.class);
         kryo.register(HotBarSlotUpdate.class);
+        kryo.register(NetworkInventory.class);
 
         server.start();
 
@@ -95,6 +98,21 @@ public class Networking {
                     if (thisPlayer != null) {
                         thisPlayer.hotBarSlot = hotBarSlotUpdate.slot;
                     }
+                } else if (object instanceof InventoryObject inventoryObject){
+                    Player thisPlayer = getPlayerByID(connection.getID());
+                    if (thisPlayer != null) {
+                        System.out.println(thisPlayer.name + " updated their inventory!");
+                        thisPlayer.updatePlayerInventory(inventoryObject);
+                    }
+                } else if (object instanceof NetworkInventory networkInventory){
+                    Player thisPlayer = getPlayerByID(connection.getID());
+                    if (thisPlayer != null) {
+                        for (int x = 0; x < networkInventory.inventory.length; x++){
+                            for (int y = 0; y < networkInventory.inventory[x].length; y++){
+                                thisPlayer.mainInventory.set(x,y,new Item(networkInventory.inventory[x][y], 1));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -102,8 +120,7 @@ public class Networking {
             public void disconnected(Connection connection) {
                 Player thisDisconnectingPlayer = getPlayerByID(connection.getID());
 
-
-                if (Objects.requireNonNull(thisDisconnectingPlayer).name != null) {
+                if (thisDisconnectingPlayer != null && thisDisconnectingPlayer.name != null) {
                     System.out.println(thisDisconnectingPlayer.name + " has disconnected");
                     savePlayerPos(thisDisconnectingPlayer.name, thisDisconnectingPlayer.pos);
                 } else {
