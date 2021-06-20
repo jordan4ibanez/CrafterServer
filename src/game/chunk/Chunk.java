@@ -310,7 +310,7 @@ public class Chunk {
 
         lightFloodFill(x, y, z);
         torchFloodFill(x, y, z);
-        
+
         thisChunk.modified = true;
         thisChunk.naturalLight[posToIndex(blockX, y, blockZ)] = getImmediateLight(x,y,z);
 
