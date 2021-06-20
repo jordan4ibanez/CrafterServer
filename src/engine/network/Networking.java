@@ -12,6 +12,7 @@ import org.joml.*;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 import static engine.FancyMath.getCameraRotationVector;
@@ -64,6 +65,7 @@ public class Networking {
         kryo.register(HotBarSlotUpdate.class,109);
         kryo.register(NetworkInventory.class,110);
         kryo.register(ThrowItemUpdate.class, 111);
+        kryo.register(ChatMessage.class,112);
 
         server.start();
 
@@ -109,7 +111,7 @@ public class Networking {
                         if (thisPlayer.mainInventory == null){
                             thisPlayer.mainInventory = new InventoryObject("main", 9,4, true);
                         }
-                        System.out.println(thisPlayer.name + " updated their inventory!");
+                        //System.out.println(thisPlayer.name + " updated their inventory!");
                         InventoryObject thisInv = thisPlayer.mainInventory;
 
                         for (int x = 0; x < networkInventory.inventory.length; x++){
@@ -130,10 +132,18 @@ public class Networking {
                         Vector3d pos = new Vector3d(thisPlayer.pos);
                         pos.y += thisPlayer.eyeHeight;
 
-                        //System.out.println(Arrays.deepToString(thisPlayer.mainInventory.inventory));
-
-                        //System.out.println("player is throwing: " + itemName);
                         createItem(itemName, pos, getCameraRotationVector(new Vector3f(thisPlayer.camRot)).mul(10f), 1);
+                    }
+                } else if (object instanceof ChatMessage chatMessage){
+                    Player thisPlayer = getPlayerByID(connection.getID());
+
+                    if (chatMessage.message != null && thisPlayer != null) {
+                        String message = "<" + thisPlayer.name + ">:" + chatMessage.message;
+                        Collection<Player> players = getAllPlayers();
+                        for (Player otherPlayer : players){
+                            sendPlayerChatMessage(otherPlayer.ID, message);
+                        }
+                        System.out.println("<" + thisPlayer.name + ">:" + chatMessage.message);
                     }
                 }
             }
@@ -152,6 +162,10 @@ public class Networking {
                 removePlayer(connection.getID());
             }
         });
+    }
+
+    public static void sendPlayerChatMessage(int ID, String message){
+        server.sendToTCP(ID, new ChatMessage(message));
     }
 
     public static void sendPlayerChunkData(int ID, ChunkObject thisChunk) throws IOException {

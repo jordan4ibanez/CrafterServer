@@ -43,7 +43,6 @@ public class Chunk {
         return Math.max(getDistance(0,0,currentChunk.z, 0, 0, z), getDistance(currentChunk.x,0,0, x, 0, 0));
     }
 
-
     private static float saveTimer = 0f;
     public static void globalChunkSaveToDisk(){
         saveTimer += getDelta();
