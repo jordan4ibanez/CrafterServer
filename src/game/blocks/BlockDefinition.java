@@ -7,6 +7,7 @@ import static game.chunk.Chunk.*;
 import static game.falling.FallingEntity.addFallingEntity;
 import static game.item.ItemDefinition.registerItem;
 import static game.item.ItemEntity.createItem;
+import static game.light.Light.torchFloodFill;
 import static game.tnt.TNTEntity.createTNT;
 
 public class BlockDefinition {
@@ -1200,6 +1201,41 @@ public class BlockDefinition {
                 "wood_2",
                 true,
                 false,
+                0,
+                true,
+                null
+        );
+
+        BlockModifier torchPlace = new BlockModifier() {
+            @Override
+            public void onPlace(Vector3d pos) {
+                torchFloodFill((int)pos.x, (int)pos.y, (int)pos.z);
+            }
+        };
+
+        new BlockDefinition(
+                29,
+                0,
+                0,
+                0,
+                1,
+                "torch",
+                true,
+                new int[]{0,1}, //front
+                new int[]{0,1}, //back
+                new int[]{0,1}, //right
+                new int[]{0,1}, //left
+                new int[]{0,1}, //top
+                new int[]{0,1},  //bottom
+                4, //allfaces
+                false,
+                false,
+                false,
+                torchPlace,
+                "wood_1",
+                "wood_2",
+                false,
+                true,
                 0,
                 true,
                 null
