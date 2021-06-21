@@ -2,7 +2,7 @@
 The server for Crafter
 
 
-#Building with ANT:
+# Building with ANT:
 
 You must install ANT (Another Neat Tool) for the build to work.
 
@@ -19,7 +19,7 @@ Drop the jar from the build directory (WHEREVER/CrafterServer/out/artifacts/Craf
 You should now be able to run the server using java -jar CrafterServer.jar in the folder you created.
 
 
-#Heads up:
+# Heads up:
 
 This is under heavy prototyping
 
