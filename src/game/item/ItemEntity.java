@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static engine.FancyMath.getDistance;
-import static engine.Time.getDelta;
+import static engine.time.Time.getDelta;
 import static engine.network.Networking.sendPlayerItemDeletionSender;
 import static engine.network.Networking.sendPlayerPickupNotification;
 import static game.collision.Collision.applyInertia;

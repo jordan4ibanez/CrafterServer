@@ -3,8 +3,7 @@ package game;
 import game.chunk.BiomeGenerator;
 import game.player.Player;
 
-import static engine.Time.calculateDelta;
-import static engine.Time.getDelta;
+import static engine.time.Time.calculateDelta;
 import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.startSaveThread;
 import static engine.network.Networking.*;

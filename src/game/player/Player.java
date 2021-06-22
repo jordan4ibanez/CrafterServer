@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static engine.FancyMath.getDistance;
-import static engine.Time.getDelta;
+import static engine.time.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
 import static engine.network.Networking.*;
 import static game.chunk.Chunk.*;

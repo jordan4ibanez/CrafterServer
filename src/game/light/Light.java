@@ -3,7 +3,7 @@ package game.light;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import static engine.Time.getDelta;
+import static engine.time.Time.getDelta;
 import static game.chunk.Chunk.*;
 
 public class Light {

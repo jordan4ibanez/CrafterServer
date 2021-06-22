@@ -4,7 +4,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 import static engine.FancyMath.randomForceValue;
-import static engine.Time.getDelta;
+import static engine.time.Time.getDelta;
 import static game.collision.Collision.applyInertia;
 import static game.tnt.Explosion.boom;
 
