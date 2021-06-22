@@ -98,7 +98,6 @@ public class Networking {
                     thisPlayer.pos = playerPosObject.pos;
                     thisPlayer.camRot = playerPosObject.cameraRot;
                 } else if (object instanceof BlockBreakUpdate blockBreakUpdate){
-                    System.out.println("got a bb at: " + blockBreakUpdate.pos.x + " " + blockBreakUpdate.pos.y + " " + blockBreakUpdate.pos.z);
                     digBlock(blockBreakUpdate.pos.x, blockBreakUpdate.pos.y, blockBreakUpdate.pos.z);
                 } else if (object instanceof BlockPlaceUpdate blockPlaceUpdate){
                     Vector3i c = blockPlaceUpdate.pos;
@@ -176,9 +175,8 @@ public class Networking {
         server.sendToTCP(ID, new NetChunk(convertChunkToCompressedByteArray(thisChunk)));
     }
 
-    public static void sendPlayerBrokenBlockData(int ID, BlockBreakUpdate blockBreakUpdate){
-        System.out.println("sending out bb: " + blockBreakUpdate.pos.x + " " + blockBreakUpdate.pos.y + " " + blockBreakUpdate.pos.z);
-        server.sendToTCP(ID, blockBreakUpdate);
+    public static void sendPlayerBrokenBlockData(int ID, Vector3i pos){
+        server.sendToTCP(ID, new BlockBreakUpdate(pos.x, pos.y, pos.z));
     }
 
     public static void sendPlayerPlacedBlockData(int ID, BlockPlaceUpdate blockPlaceUpdate){
