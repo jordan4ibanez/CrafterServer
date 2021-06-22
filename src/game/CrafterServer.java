@@ -29,7 +29,7 @@ public class CrafterServer {
         return versionName;
     }
 
-    public static boolean isGameShouldClose(){
+    public static boolean gameShouldClose(){
         return false;
     }
 

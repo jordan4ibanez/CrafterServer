@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.zip.GZIPOutputStream;
 
-import static game.CrafterServer.isGameShouldClose;
+import static game.CrafterServer.gameShouldClose;
 
 public class SaveQueue {
 
@@ -28,7 +28,7 @@ public class SaveQueue {
             ChunkSavingObject savingObject;
 
             ChunkObject thisChunk;
-            while(!isGameShouldClose()) {
+            while(!gameShouldClose()) {
                 if (!chunkSaveQueueDisk.isEmpty()) {
                     try {
 
@@ -38,7 +38,6 @@ public class SaveQueue {
 
                         savingObject = new ChunkSavingObject();
 
-                        savingObject.I = thisChunk.ID;
                         savingObject.x = thisChunk.x;
                         savingObject.z = thisChunk.z;
                         savingObject.b = thisChunk.block;
@@ -51,7 +50,7 @@ public class SaveQueue {
 
                         //learned from https://www.journaldev.com/966/java-gzip-example-compress-decompress-file
                         ByteArrayInputStream bais = new ByteArrayInputStream(stringedChunk.getBytes());
-                        FileOutputStream fos = new FileOutputStream("Worlds/world" + currentActiveWorld + "/" + savingObject.I + ".chunk");
+                        FileOutputStream fos = new FileOutputStream("Worlds/world" + currentActiveWorld + "/" + thisChunk.x + " " + thisChunk.z + ".chunk");
                         GZIPOutputStream gzipOS = new GZIPOutputStream(fos);
                         byte[] buffer = new byte[4096];
                         int len;
@@ -82,7 +81,6 @@ public class SaveQueue {
         try {
             ChunkSavingObject savingObject = new ChunkSavingObject();
 
-            savingObject.I = thisChunk.ID;
             savingObject.x = thisChunk.x;
             savingObject.z = thisChunk.z;
             savingObject.b = thisChunk.block;
@@ -95,7 +93,7 @@ public class SaveQueue {
 
             //learned from https://www.journaldev.com/966/java-gzip-example-compress-decompress-file
             ByteArrayInputStream bais = new ByteArrayInputStream(stringedChunk.getBytes());
-            FileOutputStream fos = new FileOutputStream("Worlds/world" + currentActiveWorld + "/" + savingObject.I + ".chunk");
+            FileOutputStream fos = new FileOutputStream("Worlds/world" + currentActiveWorld + "/" + thisChunk.x + " " + thisChunk.z + ".chunk");
             GZIPOutputStream gzipOS = new GZIPOutputStream(fos);
             byte[] buffer = new byte[4096];
             int len;
