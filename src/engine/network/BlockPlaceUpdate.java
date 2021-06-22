@@ -16,4 +16,8 @@ public class BlockPlaceUpdate {
         this.ID = ID;
         this.rot = rot;
     }
+
+    public boolean equals(BlockPlaceUpdate blockPlaceUpdate){
+        return (this.pos.equals(blockPlaceUpdate.pos) && this.ID == blockPlaceUpdate.ID && this.rot == blockPlaceUpdate.rot);
+    }
 }
