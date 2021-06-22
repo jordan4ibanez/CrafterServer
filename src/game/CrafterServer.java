@@ -69,7 +69,7 @@ public class CrafterServer {
 
             System.out.println("SERVER IS RUNNING ON PORT: " + getGamePort());
 
-            while (true) {
+            while (!gameShouldClose()) {
                 gameLoop();
             }
 
