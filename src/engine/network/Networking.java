@@ -8,6 +8,7 @@ import game.chunk.ChunkObject;
 import game.crafting.InventoryObject;
 import game.item.Item;
 import game.player.Player;
+import org.joml.Vector2i;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -90,13 +91,14 @@ public class Networking {
                         connection.sendTCP(new NetworkHandshake());
                     }
                 } else if (object instanceof ChunkRequest chunkRequest){
-                    Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.put(chunkRequest.x + " " + chunkRequest.z, chunkRequest.x + " " + chunkRequest.z);
+                    Objects.requireNonNull(getPlayerByName(chunkRequest.playerName)).chunkLoadingQueue.add(new Vector2i(chunkRequest.x, chunkRequest.z));
                     genBiome(chunkRequest.x, chunkRequest.z);
                 } else if (object instanceof PlayerPosObject playerPosObject){
                     Player thisPlayer = Objects.requireNonNull(getPlayerByName(playerPosObject.name));
                     thisPlayer.pos = playerPosObject.pos;
                     thisPlayer.camRot = playerPosObject.cameraRot;
                 } else if (object instanceof BlockBreakUpdate blockBreakUpdate){
+                    System.out.println("got a bb at: " + blockBreakUpdate.pos.x + " " + blockBreakUpdate.pos.y + " " + blockBreakUpdate.pos.z);
                     digBlock(blockBreakUpdate.pos.x, blockBreakUpdate.pos.y, blockBreakUpdate.pos.z);
                 } else if (object instanceof BlockPlaceUpdate blockPlaceUpdate){
                     Vector3i c = blockPlaceUpdate.pos;
@@ -175,6 +177,7 @@ public class Networking {
     }
 
     public static void sendPlayerBrokenBlockData(int ID, BlockBreakUpdate blockBreakUpdate){
+        System.out.println("sending out bb: " + blockBreakUpdate.pos.x + " " + blockBreakUpdate.pos.y + " " + blockBreakUpdate.pos.z);
         server.sendToTCP(ID, blockBreakUpdate);
     }
 

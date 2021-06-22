@@ -4,15 +4,15 @@ import engine.network.*;
 import game.chunk.ChunkObject;
 import game.crafting.InventoryObject;
 import game.item.Item;
+import org.joml.Vector2i;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static engine.FancyMath.getDistance;
 import static engine.Time.getDelta;
@@ -50,9 +50,9 @@ public class Player {
     public boolean sneaking              = false;
     public boolean running               = false;
 
-    public ConcurrentHashMap<String,String> chunkLoadingQueue = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String, BlockBreakUpdate> blockBreakingQueue = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String, BlockPlaceUpdate> blockPlacingQueue = new ConcurrentHashMap<>();
+    public ConcurrentLinkedDeque<Vector2i> chunkLoadingQueue = new ConcurrentLinkedDeque<>();
+    public ConcurrentHashMap<Vector3i, BlockBreakUpdate> blockBreakingQueue = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<Vector3i, BlockPlaceUpdate> blockPlacingQueue = new ConcurrentHashMap<>();
 
     public Vector3d camPos = new Vector3d();
     public Vector3f camRot = new Vector3f();
@@ -102,27 +102,24 @@ public class Player {
         for (Player thisPlayer : players.values()){
             if (thisPlayer.chunkLoadingQueue.size() > 0){
 
-                String thisQueue = thisPlayer.chunkLoadingQueue.elements().nextElement();
+                Vector2i thisQueue = thisPlayer.chunkLoadingQueue.pop();
 
-                String xString = thisQueue.split(" ")[0];
-                int x = Integer.parseInt(xString);
-                String zString = thisQueue.split(" ")[1];
-                int z = Integer.parseInt(zString);
+                if (thisQueue != null) {
 
-                ChunkObject thisChunk = getChunk(x,z);
-                if (thisChunk != null){
-                    sendPlayerChunkData(thisPlayer.ID, thisChunk);
+                    ChunkObject thisChunk = getChunk(thisQueue.x, thisQueue.y);
 
-                    //System.out.println("Sending player: " + thisChunk.x + " , " + thisChunk.z);
+                    if (thisChunk != null) {
+                        sendPlayerChunkData(thisPlayer.ID, thisChunk);
 
-                    //remove all equal clones
-                    for (String thisUpdate : thisPlayer.chunkLoadingQueue.values()){
-                        if (thisUpdate.equals(thisQueue)){
-                            thisPlayer.chunkLoadingQueue.remove(thisUpdate);
-                        }
+                        System.out.println("sending player: " + thisChunk.x + " " + thisChunk.z);
+
+                        //remove all equal clones
+                        thisPlayer.chunkLoadingQueue.removeIf(thisData -> thisData.equals(thisQueue.x, thisQueue.y));
+                    } else {
+                        genBiome(thisQueue.x, thisQueue.y);
+                        //don't addFirst, it's a linked deque
+                        thisPlayer.chunkLoadingQueue.add(new Vector2i(thisQueue.x, thisQueue.y));
                     }
-                } else {
-                    genBiome(x, z);
                 }
             }
         }
@@ -236,9 +233,9 @@ public class Player {
 
     private static void sendThisPlayerBrokenBlocks(Player thisPlayer){
         if (thisPlayer.blockBreakingQueue.size() > 0) {
-            BlockBreakUpdate thisQueue = thisPlayer.blockBreakingQueue.elements().nextElement();
-            sendPlayerBrokenBlockData(thisPlayer.ID, thisQueue);
-            thisPlayer.blockBreakingQueue.remove(thisQueue.pos.x + " " + thisQueue.pos.y + " " + thisQueue.pos.z);
+            BlockBreakUpdate thisUpdate = thisPlayer.blockBreakingQueue.elements().nextElement();
+            sendPlayerBrokenBlockData(thisPlayer.ID, thisUpdate);
+            thisPlayer.blockBreakingQueue.remove(thisUpdate.pos.x + " " + thisUpdate.pos.y + " " + thisUpdate.pos.z);
         }
     }
 

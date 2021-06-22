@@ -317,9 +317,10 @@ public class Chunk {
 
 
     private static void addBrokenBlockToPlayerQueue(int chunkX, int chunkZ, int x, int y, int z){
+        System.out.println("adding the fucking block");
         for (Player thisPlayer : getAllPlayers()){
             if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
-                thisPlayer.blockBreakingQueue.put(x + " " + y + " " + z, new BlockBreakUpdate(new Vector3i(x,y,z)));
+                thisPlayer.blockBreakingQueue.put(new Vector3i(x, y, z), new BlockBreakUpdate(new Vector3i(x,y,z)));
             }
         }
     }
@@ -357,7 +358,7 @@ public class Chunk {
     private static void addPlacedBlockToPlayersQueue(int chunkX, int chunkZ, int x, int y, int z, int ID, byte rotation){
         for (Player thisPlayer : getAllPlayers()){
             if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
-                thisPlayer.blockPlacingQueue.put(x + " " + y + " " + z, new BlockPlaceUpdate(new Vector3i(x,y,z), ID, rotation));
+                thisPlayer.blockPlacingQueue.put(new Vector3i(x, y, z), new BlockPlaceUpdate(new Vector3i(x,y,z), ID, rotation));
             }
         }
     }
