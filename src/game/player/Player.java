@@ -51,8 +51,8 @@ public class Player {
     public boolean running               = false;
 
     public ConcurrentLinkedDeque<Vector2i> chunkLoadingQueue = new ConcurrentLinkedDeque<>();
-    public ConcurrentHashMap<Vector3i, BlockBreakUpdate> blockBreakingQueue = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<Vector3i, BlockPlaceUpdate> blockPlacingQueue = new ConcurrentHashMap<>();
+    public ConcurrentLinkedDeque<Vector3i> blockBreakingQueue = new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<BlockPlaceUpdate> blockPlacingQueue = new ConcurrentLinkedDeque<>();
 
     public Vector3d camPos = new Vector3d();
     public Vector3f camRot = new Vector3f();
@@ -111,7 +111,7 @@ public class Player {
                     if (thisChunk != null) {
                         sendPlayerChunkData(thisPlayer.ID, thisChunk);
 
-                        System.out.println("sending player: " + thisChunk.x + " " + thisChunk.z);
+                        //System.out.println("sending player: " + thisChunk.x + " " + thisChunk.z);
 
                         //remove all equal clones
                         thisPlayer.chunkLoadingQueue.removeIf(thisData -> thisData.equals(thisQueue.x, thisQueue.y));
@@ -210,7 +210,7 @@ public class Player {
         Collection<Item> allItemEntities = getAllItemEntities();
 
         //we are creating new Vector3d objects here as to not cause
-        //a memory leak
+        //a memory leak - as in mutability leaking
         Vector3d pos1 = new Vector3d(thisPlayer.pos);
 
         double acceptableDistance = thisPlayer.itemRenderDistance;
@@ -233,17 +233,27 @@ public class Player {
 
     private static void sendThisPlayerBrokenBlocks(Player thisPlayer){
         if (thisPlayer.blockBreakingQueue.size() > 0) {
-            BlockBreakUpdate thisUpdate = thisPlayer.blockBreakingQueue.elements().nextElement();
-            sendPlayerBrokenBlockData(thisPlayer.ID, thisUpdate);
-            thisPlayer.blockBreakingQueue.remove(thisUpdate.pos.x + " " + thisUpdate.pos.y + " " + thisUpdate.pos.z);
+            Vector3i thisUpdate = thisPlayer.blockBreakingQueue.pop();
+
+            if (thisUpdate != null) {
+                sendPlayerBrokenBlockData(thisPlayer.ID, thisUpdate);
+
+                //remove duplicates
+                thisPlayer.blockBreakingQueue.removeIf(dupePos -> thisUpdate.equals(dupePos.x, dupePos.y, dupePos.z));
+            }
         }
     }
 
     private static void sendThisPlayerPlacedBlocks(Player thisPlayer){
         if (thisPlayer.blockPlacingQueue.size() > 0){
-            BlockPlaceUpdate thisQueue = thisPlayer.blockPlacingQueue.elements().nextElement();
-            sendPlayerPlacedBlockData(thisPlayer.ID, thisQueue);
-            thisPlayer.blockPlacingQueue.remove(thisQueue.pos.x + " " + thisQueue.pos.y + " " + thisQueue.pos.z);
+            BlockPlaceUpdate thisUpdate = thisPlayer.blockPlacingQueue.pop();
+
+            if (thisUpdate != null) {
+                sendPlayerPlacedBlockData(thisPlayer.ID, thisUpdate);
+
+                //remove duplicates
+                thisPlayer.blockPlacingQueue.removeIf(thisUpdate::equals);
+            }
         }
     }
 
