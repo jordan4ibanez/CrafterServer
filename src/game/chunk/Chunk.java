@@ -23,7 +23,6 @@ import static game.blocks.BlockDefinition.onDigCall;
 import static game.blocks.BlockDefinition.onPlaceCall;
 import static game.chunk.BiomeGenerator.addChunkToBiomeGeneration;
 import static game.chunk.ChunkMath.posToIndex;
-import static game.chunk.ChunkUpdateHandler.chunkUpdate;
 import static game.light.Light.*;
 import static game.player.Player.getAllPlayers;
 
@@ -51,12 +50,6 @@ public class Chunk {
         }
 
         map.put(new Vector2i(x,z), newChunk);
-
-        for (int y = 0; y < 8; y++) {
-            chunkUpdate(x, z, y);
-        }
-
-        fullNeighborUpdate(x,z);
     }
 
 
@@ -240,8 +233,6 @@ public class Chunk {
             }
         }
         thisChunk.modified = true;
-        chunkUpdate(chunkX,chunkZ,yPillar);
-        updateNeighbor(chunkX, chunkZ,blockX,y,blockZ);
     }
 
     public static void setNaturalLight(int x, int y, int z, byte newLight){
@@ -261,8 +252,6 @@ public class Chunk {
             return;
         }
         thisChunk.naturalLight[posToIndex(blockX, y, blockZ)] = newLight;
-        chunkUpdate(chunkX,chunkZ,yPillar);
-        updateNeighbor(chunkX, chunkZ,blockX,y,blockZ);
     }
 
     public static void setTorchLight(int x,int y,int z, byte newLight){
@@ -282,8 +271,6 @@ public class Chunk {
             return;
         }
         thisChunk.torchLight[posToIndex(blockX, y, blockZ)] = newLight;
-        chunkUpdate(chunkX,chunkZ,yPillar);
-        updateNeighbor(chunkX, chunkZ,blockX,y,blockZ);
     }
 
 
@@ -422,56 +409,6 @@ public class Chunk {
 
 
 
-    private static void updateNeighbor(int chunkX, int chunkZ, int x, int y, int z){
-        if (y > 127 || y < 0){
-            return;
-        }
-        int yPillar = (int)Math.floor(y/16d);
-        switch (y) {
-            case 112, 96, 80, 64, 48, 32, 16 -> chunkUpdate(chunkX, chunkZ, yPillar - 1);
-            case 111, 95, 79, 63, 47, 31, 15 -> chunkUpdate(chunkX, chunkZ, yPillar + 1);
-        }
-        if (x == 15){ //update neighbor
-            chunkUpdate(chunkX+1, chunkZ, yPillar);
-        }
-        if (x == 0){
-            chunkUpdate(chunkX-1, chunkZ, yPillar);
-        }
-        if (z == 15){
-            chunkUpdate(chunkX, chunkZ+1, yPillar);
-        }
-        if (z == 0){
-            chunkUpdate(chunkX, chunkZ-1, yPillar);
-        }
-    }
-
-    private static void fullNeighborUpdate(int chunkX, int chunkZ){
-
-        if (map.get(new Vector2i(chunkX+1,chunkZ)) != null){
-            for (int y = 0; y < 8; y++){
-                chunkUpdate(chunkX+1, chunkZ, y);
-            }
-        }
-
-        if (map.get(new Vector2i(chunkX-1,chunkZ)) != null){
-            for (int y = 0; y < 8; y++){
-                chunkUpdate(chunkX-1, chunkZ, y);
-            }
-        }
-
-        if (map.get(new Vector2i(chunkX,chunkZ+1)) != null){
-            for (int y = 0; y < 8; y++){
-                chunkUpdate(chunkX, chunkZ+1, y);
-            }
-        }
-
-        if (map.get(new Vector2i(chunkX,chunkZ-1)) != null){
-            for (int y = 0; y < 8; y++){
-                chunkUpdate(chunkX, chunkZ-1, y);
-            }
-        }
-    }
-
 
     public static void generateNewChunks(Player thisPlayer){
         //create the initial map in memory
@@ -483,10 +420,6 @@ public class Chunk {
                 if (getChunkDistanceFromPlayer(thisPlayer,x,z) <= chunkRenderDistance){
                     if (map.get(new Vector2i(x,z)) == null){
                         genBiome(x,z);
-                        for (int y = 0; y < 8; y++) {
-                            chunkUpdate(x, z, y);
-                        }
-                        fullNeighborUpdate(x, z);
                     }
                 }
             }
@@ -530,11 +463,6 @@ public class Chunk {
         }
         if (loadedChunk != null) {
             map.put(new Vector2i(chunkX, chunkZ), loadedChunk);
-
-            //dump everything into the chunk updater
-            for (int i = 0; i < 8; i++) {
-                chunkUpdate(loadedChunk.x, loadedChunk.z, i); //delayed
-            }
         } else {
             addChunkToBiomeGeneration(chunkX,chunkZ);
         }

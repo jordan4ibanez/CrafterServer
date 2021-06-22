@@ -1,5 +1,6 @@
 package game;
 
+import game.chunk.BiomeGenerator;
 import game.player.Player;
 
 import static engine.Time.calculateDelta;
@@ -9,7 +10,6 @@ import static engine.network.Networking.*;
 import static engine.settings.Settings.loadSettings;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.*;
-import static game.chunk.ChunkUpdateHandler.chunkUpdater;
 import static game.falling.FallingEntity.fallingEntityOnStep;
 import static game.item.ItemEntity.itemsOnTick;
 import static game.mob.Mob.mobsOnTick;
@@ -60,6 +60,13 @@ public class CrafterServer {
             outputServerText();
             startSaveThread();
 
+
+            //this is the biome generator thread
+            BiomeGenerator biomeGenerator = new BiomeGenerator();
+            Thread biomeThread = new Thread(biomeGenerator);
+
+            biomeThread.start();
+
             System.out.println("SERVER IS RUNNING ON PORT: " + getGamePort());
 
             while (true) {
@@ -81,7 +88,6 @@ public class CrafterServer {
     //main game loop
     private static void gameLoop() throws Exception {
         calculateDelta();
-        chunkUpdater();
         globalChunkSaveToDisk();
         gameUpdate();
         processOldChunks();

@@ -11,7 +11,6 @@ import static game.CrafterServer.gameShouldClose;
 import static game.chunk.Chunk.getChunk;
 import static game.chunk.Chunk.setChunk;
 import static game.chunk.ChunkMath.posToIndex;
-import static game.chunk.ChunkUpdateHandler.chunkUpdate;
 
 public class BiomeGenerator implements Runnable{
 
@@ -41,7 +40,13 @@ public class BiomeGenerator implements Runnable{
 
         if (!queue.isEmpty()) {
 
-            Vector2i newData = queue.pop();
+            Vector2i newData;
+
+            try{
+                newData = queue.pop();
+            } catch (Exception e){
+                return; //silent catch
+            }
 
             int chunkX = newData.x;
             int chunkZ = newData.y;
@@ -221,14 +226,6 @@ public class BiomeGenerator implements Runnable{
             }
 
             setChunk(chunkX, chunkZ, thisChunk);
-
-            //dump everything into the chunk updater
-            for (int i = 0; i < 8; i++) {
-                //generateChunkMesh(thisChunk.x, thisChunk.z, i); //instant
-                chunkUpdate(thisChunk.x, thisChunk.z, i); //delayed
-            }
-
-            //instantSave(thisChunk);
         }
     }
 }
