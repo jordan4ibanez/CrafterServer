@@ -12,4 +12,8 @@ public class BlockBreakUpdate {
     public BlockBreakUpdate(Vector3i pos){
         this.pos = pos;
     }
+
+    public BlockBreakUpdate(int x, int y, int z) {
+        this.pos = new Vector3i(x,y,z);
+    }
 }
