@@ -135,7 +135,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return 555;
         }
@@ -154,7 +154,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return false;
         }
@@ -172,7 +172,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return -1;
         }
@@ -190,7 +190,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return 0;
         }
@@ -209,7 +209,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return;
         }
@@ -244,7 +244,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return;
         }
@@ -263,7 +263,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return;
         }
@@ -276,6 +276,7 @@ public class Chunk {
 
     public static void digBlock(int x,int y,int z){
         if (y > 127 || y < 0){
+            System.out.println("returning Y");
             return;
         }
         int yPillar = (int)Math.floor(y/16d);
@@ -283,11 +284,13 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
+            System.out.println("the chunk is null");
             return;
         }
         if (thisChunk.block == null){
+            System.out.println("the block is null");
             return;
         }
 
@@ -317,10 +320,9 @@ public class Chunk {
 
 
     private static void addBrokenBlockToPlayerQueue(int chunkX, int chunkZ, int x, int y, int z){
-        System.out.println("adding the fucking block");
         for (Player thisPlayer : getAllPlayers()){
             if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
-                thisPlayer.blockBreakingQueue.put(new Vector3i(x, y, z), new BlockBreakUpdate(new Vector3i(x,y,z)));
+                thisPlayer.blockBreakingQueue.add(new Vector3i(x, y, z));
             }
         }
     }
@@ -334,7 +336,7 @@ public class Chunk {
         int chunkZ = (int)Math.floor(z/16d);
         int blockX = (x - (16*chunkX));
         int blockZ = (z - (16*chunkZ));
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
         if (thisChunk == null){
             return;
         }
@@ -358,7 +360,7 @@ public class Chunk {
     private static void addPlacedBlockToPlayersQueue(int chunkX, int chunkZ, int x, int y, int z, int ID, byte rotation){
         for (Player thisPlayer : getAllPlayers()){
             if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
-                thisPlayer.blockPlacingQueue.put(new Vector3i(x, y, z), new BlockPlaceUpdate(new Vector3i(x,y,z), ID, rotation));
+                thisPlayer.blockPlacingQueue.add(new BlockPlaceUpdate(new Vector3i(x,y,z), ID, rotation));
             }
         }
     }
@@ -372,7 +374,7 @@ public class Chunk {
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
 
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
 
         if (thisChunk == null){
             return 0;
@@ -393,7 +395,7 @@ public class Chunk {
         int blockX = (int)(x - (16d*chunkX));
         int blockZ = (int)(z - (16d*chunkZ));
 
-        ChunkObject thisChunk = map.get(new Vector2i(x,z));
+        ChunkObject thisChunk = map.get(new Vector2i(chunkX,chunkZ));
 
         if (thisChunk == null){
             return 0;
