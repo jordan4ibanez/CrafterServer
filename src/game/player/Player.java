@@ -163,7 +163,12 @@ public class Player {
     }
 
     public static boolean playerExists(String playerName){
-        return players.get(playerName) != null;
+        for (Player player : players.values()){
+            if (player.name.equals(playerName)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
