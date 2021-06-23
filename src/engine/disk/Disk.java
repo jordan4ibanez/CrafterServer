@@ -29,8 +29,6 @@ public class Disk {
         createAlphaWorldFolder();
     }
 
-    //https://stackoverflow.com/a/24734290
-    //https://stackoverflow.com/a/3758880
     public static String worldSize(byte world) {
         long bytes = 0;
 

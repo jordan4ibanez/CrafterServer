@@ -12,25 +12,16 @@ import static game.tnt.TNTEntity.createTNT;
 
 public class BlockDefinition {
 
-    private final static BlockDefinition[] blockIDs = new BlockDefinition[30];
+    private final static BlockDefinition[] blockIDs = new BlockDefinition[(byte)30];
 
     //0: normal,
-    private final static BlockShape[] blockShapeMap = new BlockShape[8];
+    private final static BlockShape[] blockShapeMap = new BlockShape[(byte)8];
 
-    //fixed fields for the class
-    private static final byte atlasSizeX = 32;
-    private static final byte atlasSizeY = 32;
 
     //actual block object fields
     public byte     ID;
     public String  name;
     public boolean dropsItem;
-    public float[] frontTexture;  //front
-    public float[] backTexture;   //back
-    public float[] rightTexture;  //right
-    public float[] leftTexture;   //left
-    public float[] topTexture;    //top
-    public float[] bottomTexture; //bottom
     public boolean walkable;
     public boolean steppable;
     public boolean isLiquid;
@@ -56,12 +47,6 @@ public class BlockDefinition {
             float leafHardness,
             String name,
             boolean dropsItem,
-            int[] front,
-            int[] back,
-            int[] right,
-            int[] left,
-            int[] top,
-            int[] bottom,
             int drawType,
             boolean walkable,
             boolean steppable,
@@ -84,12 +69,6 @@ public class BlockDefinition {
         this.leafHardness = leafHardness;
         this.name = name;
         this.dropsItem = dropsItem;
-        this.frontTexture  = calculateTexture(  front[0],  front[1] );
-        this.backTexture   = calculateTexture(   back[0],   back[1] );
-        this.rightTexture  = calculateTexture(  right[0],  right[1] );
-        this.leftTexture   = calculateTexture(   left[0],   left[1] );
-        this.topTexture    = calculateTexture(    top[0],    top[1] );
-        this.bottomTexture = calculateTexture( bottom[0], bottom[1] );
         this.drawType = drawType;
         this.walkable = walkable;
         this.steppable = steppable;
@@ -137,16 +116,6 @@ public class BlockDefinition {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static float[] calculateTexture(int x, int y){
-        float[] texturePoints = new float[4];
-        texturePoints[0] = (float)x/(float)atlasSizeX;     //min x (-)
-        texturePoints[1] = (float)(x+1)/(float)atlasSizeX; //max x (+)
-
-        texturePoints[2] = (float)y/(float)atlasSizeY;     //min y (-)
-        texturePoints[3] = (float)(y+1)/(float)atlasSizeY; //max y (+)
-        return texturePoints;
     }
 
     public static String getBlockName(int ID){
@@ -290,12 +259,6 @@ public class BlockDefinition {
                 -1f,
                 "air",
                 false,
-                new int[]{-1,-1}, //front
-                new int[]{-1,-1}, //back
-                new int[]{-1,-1}, //right
-                new int[]{-1,-1}, //left
-                new int[]{-1,-1}, //top
-                new int[]{-1,-1},  //bottom
                 0,
                 false,
                 false,
@@ -318,12 +281,6 @@ public class BlockDefinition {
                 0f,
                 "dirt",
                 true,
-                new int[]{0,0}, //front
-                new int[]{0,0}, //back
-                new int[]{0,0}, //right
-                new int[]{0,0}, //left
-                new int[]{0,0}, //top
-                new int[]{0,0},  //bottom
                 1,
                 true,
                 false,
@@ -346,12 +303,6 @@ public class BlockDefinition {
                 0,
                 "grass",
                 true,
-                new int[]{5,0}, //front
-                new int[]{5,0}, //back
-                new int[]{5,0}, //right
-                new int[]{5,0}, //left
-                new int[]{4,0}, //top
-                new int[]{0,0},  //bottom
                 1,
                 true,
                 false,
@@ -374,12 +325,6 @@ public class BlockDefinition {
                 0,
                 "stone",
                 true,
-                new int[]{1,0}, //front
-                new int[]{1,0}, //back
-                new int[]{1,0}, //right
-                new int[]{1,0}, //left
-                new int[]{1,0}, //top
-                new int[]{1,0},  //bottom
                 1,
                 true,
                 false,
@@ -402,12 +347,6 @@ public class BlockDefinition {
                 0,
                 "cobblestone",
                 true,
-                new int[]{2,0}, //front
-                new int[]{2,0}, //back
-                new int[]{2,0}, //right
-                new int[]{2,0}, //left
-                new int[]{2,0}, //top
-                new int[]{2,0},  //bottom
                 1,
                 true,
                 false,
@@ -430,12 +369,6 @@ public class BlockDefinition {
                 -1,
                 "bedrock",
                 false,
-                new int[]{6,0}, //front
-                new int[]{6,0}, //back
-                new int[]{6,0}, //right
-                new int[]{6,0}, //left
-                new int[]{6,0}, //top
-                new int[]{6,0},  //bottom
                 1,
                 true,
                 false,
@@ -467,12 +400,6 @@ public class BlockDefinition {
                 0,
                 "tnt",
                 false,
-                new int[]{7,0}, //front
-                new int[]{7,0}, //back
-                new int[]{7,0}, //right
-                new int[]{7,0}, //left
-                new int[]{8,0}, //top
-                new int[]{9,0},  //bottom
                 1,
                 true,
                 false,
@@ -495,12 +422,6 @@ public class BlockDefinition {
                 -1,
                 "water",
                 false,
-                new int[]{10,0}, //front
-                new int[]{10,0}, //back
-                new int[]{10,0}, //right
-                new int[]{10,0}, //left
-                new int[]{10,0}, //top
-                new int[]{10,0},  //bottom
                 1,
                 false,
                 false,
@@ -523,12 +444,6 @@ public class BlockDefinition {
                 0,
                 "coal ore",
                 true,
-                new int[]{11,0}, //front
-                new int[]{11,0}, //back
-                new int[]{11,0}, //right
-                new int[]{11,0}, //left
-                new int[]{11,0}, //top
-                new int[]{11,0},  //bottom
                 1,
                 true,
                 false,
@@ -551,12 +466,6 @@ public class BlockDefinition {
                 0,
                 "iron ore",
                 true,
-                new int[]{12,0}, //front
-                new int[]{12,0}, //back
-                new int[]{12,0}, //right
-                new int[]{12,0}, //left
-                new int[]{12,0}, //top
-                new int[]{12,0},  //bottom
                 1,
                 true,
                 false,
@@ -579,12 +488,6 @@ public class BlockDefinition {
                 0,
                 "gold ore",
                 true,
-                new int[]{13,0}, //front
-                new int[]{13,0}, //back
-                new int[]{13,0}, //right
-                new int[]{13,0}, //left
-                new int[]{13,0}, //top
-                new int[]{13,0},  //bottom
                 1,
                 true,
                 false,
@@ -607,12 +510,6 @@ public class BlockDefinition {
                 0,
                 "diamond ore",
                 true,
-                new int[]{14,0}, //front
-                new int[]{14,0}, //back
-                new int[]{14,0}, //right
-                new int[]{14,0}, //left
-                new int[]{14,0}, //top
-                new int[]{14,0},  //bottom
                 1,
                 true,
                 false,
@@ -635,12 +532,6 @@ public class BlockDefinition {
                 0,
                 "emerald ore",
                 true,
-                new int[]{15,0}, //front
-                new int[]{15,0}, //back
-                new int[]{15,0}, //right
-                new int[]{15,0}, //left
-                new int[]{15,0}, //top
-                new int[]{15,0},  //bottom
                 1,
                 true,
                 false,
@@ -663,12 +554,6 @@ public class BlockDefinition {
                 0,
                 "lapis ore",
                 true,
-                new int[]{16,0}, //front
-                new int[]{16,0}, //back
-                new int[]{16,0}, //right
-                new int[]{16,0}, //left
-                new int[]{16,0}, //top
-                new int[]{16,0},  //bottom
                 1,
                 true,
                 false,
@@ -691,12 +576,6 @@ public class BlockDefinition {
                 0,
                 "sapphire ore",
                 true,
-                new int[]{17,0}, //front
-                new int[]{17,0}, //back
-                new int[]{17,0}, //right
-                new int[]{17,0}, //left
-                new int[]{17,0}, //top
-                new int[]{17,0},  //bottom
                 1,
                 true,
                 false,
@@ -719,12 +598,6 @@ public class BlockDefinition {
                 0,
                 "ruby ore",
                 true,
-                new int[]{18,0}, //front
-                new int[]{18,0}, //back
-                new int[]{18,0}, //right
-                new int[]{18,0}, //left
-                new int[]{18,0}, //top
-                new int[]{18,0},  //bottom
                 1,
                 true,
                 false,
@@ -747,12 +620,6 @@ public class BlockDefinition {
                 0,
                 "cobblestone stair",
                 true,
-                new int[]{2,0}, //front
-                new int[]{2,0}, //back
-                new int[]{2,0}, //right
-                new int[]{2,0}, //left
-                new int[]{2,0}, //top
-                new int[]{2,0},  //bottom
                 2,
                 true,
                 true,
@@ -776,12 +643,6 @@ public class BlockDefinition {
                 0,
                 "pumpkin",
                 true,
-                new int[]{19,0}, //front
-                new int[]{19,0}, //back
-                new int[]{19,0}, //right
-                new int[]{19,0}, //left
-                new int[]{20,0}, //top
-                new int[]{20,0},  //bottom
                 1,
                 true,
                 false,
@@ -803,12 +664,6 @@ public class BlockDefinition {
                 0,
                 "jack 'o lantern unlit",
                 true,
-                new int[]{21,0}, //front
-                new int[]{19,0}, //back
-                new int[]{19,0}, //right
-                new int[]{19,0}, //left
-                new int[]{20,0}, //top
-                new int[]{20,0},  //bottom
                 1,
                 true,
                 false,
@@ -830,12 +685,6 @@ public class BlockDefinition {
                 0,
                 "jack 'o lantern lit",
                 true,
-                new int[]{22,0}, //front
-                new int[]{19,0}, //back
-                new int[]{19,0}, //right
-                new int[]{19,0}, //left
-                new int[]{20,0}, //top
-                new int[]{20,0},  //bottom
                 1,
                 true,
                 false,
@@ -868,12 +717,6 @@ public class BlockDefinition {
                 0,
                 "sand",
                 true,
-                new int[]{23,0}, //front
-                new int[]{23,0}, //back
-                new int[]{23,0}, //right
-                new int[]{23,0}, //left
-                new int[]{23,0}, //top
-                new int[]{23,0},  //bottom
                 1,
                 true,
                 false,
@@ -904,12 +747,6 @@ public class BlockDefinition {
                 0,
                 "doorOpenTop",
                 false,
-                new int[]{24,0}, //front
-                new int[]{24,0}, //back
-                new int[]{24,0}, //right
-                new int[]{24,0}, //left
-                new int[]{24,0}, //top
-                new int[]{24,0},  //bottom
                 5,
                 true,
                 false,
@@ -949,12 +786,6 @@ public class BlockDefinition {
                 0,
                 "doorOpenBottom",
                 false,
-                new int[]{25,0}, //front
-                new int[]{25,0}, //back
-                new int[]{25,0}, //right
-                new int[]{25,0}, //left
-                new int[]{25,0}, //top
-                new int[]{25,0},  //bottom
                 5,
                 true,
                 false,
@@ -1003,12 +834,6 @@ public class BlockDefinition {
                 0,
                 "doorClosedTop",
                 false,
-                new int[]{24,0}, //front
-                new int[]{24,0}, //back
-                new int[]{24,0}, //right
-                new int[]{24,0}, //left
-                new int[]{24,0}, //top
-                new int[]{24,0},  //bottom
                 6,
                 true,
                 false,
@@ -1049,12 +874,6 @@ public class BlockDefinition {
                 0,
                 "doorClosedBottom",
                 false,
-                new int[]{25,0}, //front
-                new int[]{25,0}, //back
-                new int[]{25,0}, //right
-                new int[]{25,0}, //left
-                new int[]{25,0}, //top
-                new int[]{25,0},  //bottom
                 6,
                 true,
                 false,
@@ -1095,12 +914,6 @@ public class BlockDefinition {
                 0,
                 "tree",
                 true,
-                new int[]{26,0}, //front
-                new int[]{26,0}, //back
-                new int[]{26,0}, //right
-                new int[]{26,0}, //left
-                new int[]{27,0}, //top
-                new int[]{27,0},  //bottom
                 1,
                 true,
                 false,
@@ -1123,12 +936,6 @@ public class BlockDefinition {
                 1,
                 "leaves",
                 false,
-                new int[]{28,0}, //front
-                new int[]{28,0}, //back
-                new int[]{28,0}, //right
-                new int[]{28,0}, //left
-                new int[]{28,0}, //top
-                new int[]{28,0},  //bottom
                 4, //allfaces
                 true,
                 false,
@@ -1151,12 +958,6 @@ public class BlockDefinition {
                 0,
                 "wood",
                 true,
-                new int[]{29,0}, //front
-                new int[]{29,0}, //back
-                new int[]{29,0}, //right
-                new int[]{29,0}, //left
-                new int[]{29,0}, //top
-                new int[]{29,0},  //bottom
                 1, //regular
                 true,
                 false,
@@ -1186,12 +987,6 @@ public class BlockDefinition {
                 0,
                 "workbench",
                 true,
-                new int[]{31,0}, //front
-                new int[]{31,0}, //back
-                new int[]{31,0}, //right
-                new int[]{31,0}, //left
-                new int[]{30,0}, //top
-                new int[]{31,0},  //bottom
                 1, //regular
                 true,
                 false,
@@ -1221,12 +1016,6 @@ public class BlockDefinition {
                 1,
                 "torch",
                 true,
-                new int[]{0,1}, //front
-                new int[]{0,1}, //back
-                new int[]{0,1}, //right
-                new int[]{0,1}, //left
-                new int[]{0,1}, //top
-                new int[]{0,1},  //bottom
                 4, //allfaces
                 false,
                 false,
@@ -1242,7 +1031,7 @@ public class BlockDefinition {
         );
     }
 
-    public static BlockDefinition getBlockDefinition(int ID){
+    public static BlockDefinition getBlockDefinition(byte ID){
         return blockIDs[ID];
     }
 
@@ -1259,52 +1048,12 @@ public class BlockDefinition {
         return(blockIDs[ID].isRightClickable && blockIDs[ID].blockModifier != null);
     }
 
-    public static float[] getFrontTexturePoints(int ID, byte rotation){
-        return switch (rotation) {
-            case 1 -> blockIDs[ID].rightTexture;
-            case 2 -> blockIDs[ID].backTexture;
-            case 3 -> blockIDs[ID].leftTexture;
-            default -> blockIDs[ID].frontTexture;
-        };
-    }
-    public static float[] getBackTexturePoints(int ID, byte rotation){
-        return switch (rotation) {
-            case 1 -> blockIDs[ID].leftTexture;
-            case 2 -> blockIDs[ID].frontTexture;
-            case 3 -> blockIDs[ID].rightTexture;
-            default -> blockIDs[ID].backTexture;
-        };
-
-    }
-    public static float[] getRightTexturePoints(int ID, byte rotation){
-        return switch (rotation) {
-            case 1 -> blockIDs[ID].backTexture;
-            case 2 -> blockIDs[ID].leftTexture;
-            case 3 -> blockIDs[ID].frontTexture;
-            default -> blockIDs[ID].rightTexture;
-        };
-    }
-    public static float[] getLeftTexturePoints(int ID, byte rotation){
-        return switch (rotation) {
-            case 1 -> blockIDs[ID].frontTexture;
-            case 2 -> blockIDs[ID].rightTexture;
-            case 3 -> blockIDs[ID].backTexture;
-            default -> blockIDs[ID].leftTexture;
-        };
-    }
-
     public static boolean isBlockLiquid(int ID){
         return blockIDs[ID].isLiquid;
     }
 
     public static float getBlockViscosity(int ID){
         return blockIDs[ID].viscosity;
-    }
-    public static float[] getTopTexturePoints(int ID){
-        return blockIDs[ID].topTexture;
-    }
-    public static float[] getBottomTexturePoints(int ID){
-        return blockIDs[ID].bottomTexture;
     }
 
     public static boolean isBlockPointable(int ID){

@@ -4,8 +4,6 @@ import engine.FastNoise;
 import org.joml.Vector2i;
 import org.joml.Vector3i;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static game.CrafterServer.gameShouldClose;
