@@ -8,6 +8,7 @@ import static engine.disk.Disk.*;
 import static engine.disk.SaveQueue.startSaveThread;
 import static engine.network.Networking.*;
 import static engine.settings.Settings.loadSettings;
+import static engine.time.TimeOfDay.tickUpTimeOfDay;
 import static game.blocks.BlockDefinition.initializeBlocks;
 import static game.chunk.Chunk.*;
 import static game.falling.FallingEntity.fallingEntityOnStep;
@@ -88,6 +89,7 @@ public class CrafterServer {
     //main game loop
     private static void gameLoop() throws Exception {
         calculateDelta();
+        tickUpTimeOfDay();
         globalChunkSaveToDisk();
         gameUpdate();
         processOldChunks();

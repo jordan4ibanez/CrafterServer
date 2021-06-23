@@ -1,6 +1,7 @@
 package game.chunk;
 
 import engine.network.BlockPlaceUpdate;
+import game.light.Light;
 import game.player.Player;
 import org.joml.Vector2i;
 import org.joml.Vector3d;
@@ -73,33 +74,6 @@ public class Chunk {
         }
     }
 
-    //this is for testing the day/night cycle
-    public static void testLightCycleFlood(){
-        byte currentLightLevel = getCurrentGlobalLightLevel();
-        for (ChunkObject thisChunk : map.values()){
-            floodChunkWithNewGlobalLight(thisChunk, currentLightLevel);
-        }
-    }
-
-    //this is for testing the day/night cycle
-    private static void floodChunkWithNewGlobalLight(ChunkObject thisChunk, byte newLight){
-
-        /* this causes SERIOUS lag
-        Vector3i thisPos = indexToPos(i);
-
-        int blockX = (int)(thisPos.x + (16d*thisChunk.x));
-        int blockZ = (int)(thisPos.z + (16d*thisChunk.z));
-
-        if (thisChunk.block[i] == 0 && !underSunLight(blockX, thisPos.y, blockZ)) {
-            lightFloodFill(blockX, thisPos.y, blockZ);
-        }
-
-        if (thisChunk.light[i] == oldLight) {
-          System.out.println("something broken");
-        }
-         */
-        Arrays.fill(thisChunk.naturalLight, newLight);
-    }
 
     public static void globalFinalChunkSaveToDisk(){
         updateWorldsPathToAvoidCrash();
@@ -199,7 +173,7 @@ public class Chunk {
         return thisChunk.rotation[posToIndex(blockX, y, blockZ)];
     }
 
-    public static void setBlock(int x,int y,int z, int newBlock, int rot){
+    public static void setBlock(int x,int y,int z, byte newBlock, int rot){
         if (y > 127 || y < 0){
             return;
         }
@@ -250,7 +224,7 @@ public class Chunk {
         if (thisChunk.block == null){
             return;
         }
-        thisChunk.naturalLight[posToIndex(blockX, y, blockZ)] = newLight;
+        thisChunk.light[posToIndex(blockX, y, blockZ)] = setByteNaturalLight(thisChunk.light[posToIndex(blockX, y, blockZ)],newLight);
     }
 
     public static void setTorchLight(int x,int y,int z, byte newLight){
@@ -269,7 +243,7 @@ public class Chunk {
         if (thisChunk.block == null){
             return;
         }
-        thisChunk.torchLight[posToIndex(blockX, y, blockZ)] = newLight;
+        thisChunk.light[posToIndex(blockX, y, blockZ)] = setByteTorchLight(thisChunk.light[posToIndex(blockX, y, blockZ)], newLight);
     }
 
 
@@ -310,7 +284,7 @@ public class Chunk {
         torchFloodFill(x, y, z);
 
         thisChunk.modified = true;
-        thisChunk.naturalLight[posToIndex(blockX, y, blockZ)] = getImmediateLight(x,y,z);
+        thisChunk.light[posToIndex(blockX, y, blockZ)] = setByteNaturalLight(thisChunk.light[posToIndex(blockX, y, blockZ)],getImmediateLight(x,y,z));
 
         addBrokenBlockToPlayerQueue(chunkX,chunkZ, x,y,z);
 
@@ -326,7 +300,7 @@ public class Chunk {
         }
     }
 
-    public static void placeBlock(int x,int y,int z, int ID, int rot){
+    public static void placeBlock(int x,int y,int z, byte ID, int rot){
         if (y > 127 || y < 0){
             return;
         }
@@ -342,13 +316,17 @@ public class Chunk {
         if (thisChunk.block == null){
             return;
         }
+
         thisChunk.block[posToIndex(blockX, y, blockZ)] = ID;
+
         thisChunk.rotation[posToIndex(blockX, y, blockZ)] = (byte) rot;
         if (thisChunk.heightMap[blockX][blockZ] < y){
             thisChunk.heightMap[blockX][blockZ] = (byte) y;
         }
+
         lightFloodFill(x, y, z);
         torchFloodFill(x, y, z);
+
         thisChunk.modified = true;
 
         addPlacedBlockToPlayersQueue(chunkX,chunkZ,x,y,z, ID, (byte)rot);
@@ -356,7 +334,7 @@ public class Chunk {
         onPlaceCall(ID, new Vector3d(x,y,z));
     }
 
-    private static void addPlacedBlockToPlayersQueue(int chunkX, int chunkZ, int x, int y, int z, int ID, byte rotation){
+    private static void addPlacedBlockToPlayersQueue(int chunkX, int chunkZ, int x, int y, int z, byte ID, byte rotation){
         for (Player thisPlayer : getAllPlayers()){
             if (getChunkDistanceFromPlayer(thisPlayer, chunkX,chunkZ) < thisPlayer.renderDistance){
                 thisPlayer.blockPlacingQueue.add(new BlockPlaceUpdate(new Vector3i(x,y,z), ID, rotation));
@@ -378,11 +356,11 @@ public class Chunk {
         if (thisChunk == null){
             return 0;
         }
-        if (thisChunk.naturalLight == null){
+        if (thisChunk.light == null){
             return 0;
         }
 
-        return thisChunk.naturalLight[posToIndex(blockX, y, blockZ)];
+        return getByteNaturalLight(thisChunk.light[posToIndex(blockX, y, blockZ)]);
     }
 
     public static byte getTorchLight(int x,int y,int z){
@@ -399,18 +377,34 @@ public class Chunk {
         if (thisChunk == null){
             return 0;
         }
-        if (thisChunk.torchLight == null){
+        if (thisChunk.light == null){
             return 0;
         }
 
 
         int index = posToIndex(blockX, y, blockZ);
 
-        return thisChunk.torchLight[index];
+        return getByteTorchLight(thisChunk.light[index]);
     }
 
 
+    //Thanks a lot Lars!!
+    public static byte getByteTorchLight(byte input){
+        return (byte) (input & ((1 << 4) - 1));
+    }
+    public static byte getByteNaturalLight(byte input){
+        return (byte) (((1 << 4) - 1) & input >> 4);
+    }
 
+    public static byte setByteTorchLight(byte input, byte newValue){
+        byte naturalLight = getByteNaturalLight(input);
+        return (byte) (naturalLight << 4 | newValue);
+    }
+
+    public static byte setByteNaturalLight(byte input, byte newValue){
+        byte torchLight = getByteTorchLight(input);
+        return (byte) (newValue << 4 | torchLight);
+    }
 
     public static void generateNewChunks(Player thisPlayer){
         //create the initial map in memory

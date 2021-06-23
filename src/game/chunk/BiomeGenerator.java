@@ -9,8 +9,7 @@ import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static game.CrafterServer.gameShouldClose;
-import static game.chunk.Chunk.getChunk;
-import static game.chunk.Chunk.setChunk;
+import static game.chunk.Chunk.*;
 import static game.chunk.ChunkMath.posToIndex;
 
 public class BiomeGenerator implements Runnable{
@@ -90,7 +89,7 @@ public class BiomeGenerator implements Runnable{
                     for (generationY = 127; generationY >= 0; generationY--) {
 
                         //don't overwrite
-                        int currBlock = thisChunk.block[posToIndex(generationX, generationY, generationZ)];
+                        byte currBlock = thisChunk.block[posToIndex(generationX, generationY, generationZ)];
 
                         //bedrock
                         if (generationY <= 0 + dirtHeightRandom) {
@@ -128,7 +127,7 @@ public class BiomeGenerator implements Runnable{
                         } else if (generationY < height - dirtHeight) {
                             if (generationY <= 30 && generationY > 0) {
                                 if (Math.random() > 0.95) {
-                                    currBlock = (short) Math.floor(8 + (Math.random() * 8));
+                                    currBlock = (byte) Math.floor(8 + (Math.random() * 8));
                                 } else {
                                     currBlock = 3;
                                 }
@@ -152,9 +151,9 @@ public class BiomeGenerator implements Runnable{
                         }
 
                         if (gennedSand || gennedGrass) {
-                            thisChunk.naturalLight[posToIndex(generationX, generationY, generationZ)] = 0;
+                            thisChunk.light[posToIndex(generationX, generationY, generationZ)] = 0;
                         } else {
-                            thisChunk.naturalLight[posToIndex(generationX, generationY, generationZ)] = 15;
+                            thisChunk.light[posToIndex(generationX, generationY, generationZ)] = setByteNaturalLight((byte)0,(byte)15);
                         }
                     }
                 }

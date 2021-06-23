@@ -7,9 +7,9 @@ public class FallingEntityObject {
     public Vector3d pos;
     public Vector3f inertia;
     public int key;
-    public int ID;
+    public byte ID;
 
-    public FallingEntityObject(Vector3d pos, Vector3f inertia, int key, int ID){
+    public FallingEntityObject(Vector3d pos, Vector3f inertia, int key, byte ID){
         this.pos = pos;
         this.inertia = inertia;
         this.key = key;

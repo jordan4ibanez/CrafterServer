@@ -12,17 +12,17 @@ import static game.tnt.TNTEntity.createTNT;
 
 public class BlockDefinition {
 
-    private final static BlockDefinition[] blockIDs = new BlockDefinition[256];
+    private final static BlockDefinition[] blockIDs = new BlockDefinition[30];
 
     //0: normal,
-    private final static BlockShape[] blockShapeMap = new BlockShape[128];
+    private final static BlockShape[] blockShapeMap = new BlockShape[8];
 
     //fixed fields for the class
     private static final byte atlasSizeX = 32;
     private static final byte atlasSizeY = 32;
 
     //actual block object fields
-    public int     ID;
+    public byte     ID;
     public String  name;
     public boolean dropsItem;
     public float[] frontTexture;  //front
@@ -49,7 +49,7 @@ public class BlockDefinition {
     public String droppedItem;
 
     public BlockDefinition(
-            int ID,
+            byte ID,
             float stoneHardness,
             float dirtHardness,
             float woodHardness,
@@ -283,7 +283,7 @@ public class BlockDefinition {
 
 
         new BlockDefinition(
-                0,
+                (byte) 0,
                 -1f,
                 -1f,
                 -1f,
@@ -311,7 +311,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                1,
+                (byte) 1,
                 0f,
                 1f,
                 0f,
@@ -339,7 +339,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                2,
+                (byte) 2,
                 0,
                 2f,
                 0,
@@ -367,7 +367,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                3,
+                (byte) 3,
                 1,
                 0,
                 0,
@@ -395,7 +395,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                4,
+                (byte) 4,
                 1.5f,
                 0,
                 0,
@@ -423,7 +423,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                5,
+                (byte) 5,
                 -1,
                 -1,
                 -1,
@@ -460,7 +460,7 @@ public class BlockDefinition {
         };
 
         new BlockDefinition(
-                6,
+                (byte) 6,
                 0,
                 0,
                 2,
@@ -488,7 +488,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                7,
+                (byte) 7,
                 -1,
                 -1,
                 -1,
@@ -516,7 +516,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                8,
+                (byte) 8,
                 4,
                 0,
                 0,
@@ -544,7 +544,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                9,
+                (byte)9,
                 6,
                 0,
                 0,
@@ -572,7 +572,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                10,
+                (byte) 10,
                 8,
                 0,
                 0,
@@ -600,7 +600,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                11,
+                (byte) 11,
                 10,
                 0,
                 0,
@@ -628,7 +628,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                12,
+                (byte) 12,
                 12,
                 0,
                 0,
@@ -656,7 +656,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                13,
+                (byte) 13,
                 10,
                 0,
                 0,
@@ -684,7 +684,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                14,
+                (byte) 14,
                 14,
                 0,
                 0,
@@ -712,7 +712,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                15,
+                (byte) 15,
                 16,
                 0,
                 0,
@@ -740,7 +740,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                16,
+                (byte) 16,
                 2,
                 0,
                 0,
@@ -769,7 +769,7 @@ public class BlockDefinition {
 
 
         new BlockDefinition(
-                17,
+                (byte) 17,
                 0,
                 0,
                 1,
@@ -796,7 +796,7 @@ public class BlockDefinition {
                 null
         );
         new BlockDefinition(
-                18,
+                (byte) 18,
                 0,
                 0,
                 1,
@@ -823,7 +823,7 @@ public class BlockDefinition {
                 null
         );
         new BlockDefinition(
-                19,
+                (byte) 19,
                 0,
                 0,
                 1,
@@ -856,12 +856,12 @@ public class BlockDefinition {
             public void onPlace(Vector3d pos) {
                 if (getBlock((int)pos.x, (int)pos.y - 1, (int)pos.z) == 0) {
                     digBlock((int) pos.x, (int) pos.y, (int) pos.z);
-                    addFallingEntity(new Vector3d(pos.x + 0.5d, pos.y, pos.z + 0.5d), new Vector3f(0, 0, 0), 20);
+                    addFallingEntity(new Vector3d(pos.x + 0.5d, pos.y, pos.z + 0.5d), new Vector3f(0, 0, 0), (byte) 20);
                 }
             }
         };
         new BlockDefinition(
-                20,
+                (byte) 20,
                 0,
                 1,
                 0,
@@ -897,7 +897,7 @@ public class BlockDefinition {
                 );
 
         new BlockDefinition(
-                21,
+                (byte)21,
                 0,
                 0,
                 1,
@@ -918,7 +918,7 @@ public class BlockDefinition {
                     @Override
                     public void onDig(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y - 1, (int)pos.z) == 22) {
-                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, 0, 0);
+                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, (byte) 0, 0);
                             createItem("door", pos.add(0.5d,0.5d,0.5d), 1);
                         }
                     }
@@ -927,8 +927,8 @@ public class BlockDefinition {
                     public void onRightClick(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y - 1, (int)pos.z) == 22) {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
-                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, 23,rot);
-                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, 24,rot);
+                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, (byte) 23,rot);
+                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, (byte) 24,rot);
                         }
                     }
                 },
@@ -942,7 +942,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                22,
+                (byte) 22,
                 0,
                 0,
                 1,
@@ -964,7 +964,7 @@ public class BlockDefinition {
                     @Override
                     public void onDig(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y + 1, (int)pos.z) == 21) {
-                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, 0, 0);
+                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, (byte) 0, 0);
                             createItem("door", pos.add(0.5d,0.5d,0.5d), 1);
                         }
                     }
@@ -973,8 +973,8 @@ public class BlockDefinition {
                     public void onRightClick(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y + 1, (int)pos.z) == 21) {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
-                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, 23,rot);
-                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, 24,rot);
+                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, (byte) 23,rot);
+                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, (byte) 24,rot);
                         }
                     }
                 },
@@ -996,7 +996,7 @@ public class BlockDefinition {
                 );
 
         new BlockDefinition(
-                23,
+                (byte) 23,
                 0,
                 0,
                 1,
@@ -1018,7 +1018,7 @@ public class BlockDefinition {
                     @Override
                     public void onDig(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y - 1, (int)pos.z) == 24) {
-                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, 0, 0);
+                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, (byte) 0, 0);
                             createItem("door", pos.add(0.5d,0.5d,0.5d), 1);
                         }
                     }
@@ -1027,8 +1027,8 @@ public class BlockDefinition {
                     public void onRightClick(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y - 1, (int)pos.z) == 24) {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
-                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, 21,rot);
-                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, 22,rot);
+                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, (byte) 21,rot);
+                            setBlock((int)pos.x, (int)pos.y - 1, (int)pos.z, (byte) 22,rot);
                         }
                     }
                 },
@@ -1042,7 +1042,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                24,
+                (byte) 24,
                 0,
                 0,
                 1,
@@ -1064,7 +1064,7 @@ public class BlockDefinition {
                     @Override
                     public void onDig(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y + 1, (int)pos.z) == 23) {
-                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, 0, 0);
+                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, (byte) 0, 0);
                             createItem("door", pos.add(0.5d,0.5d,0.5d), 1);
                         }
                     }
@@ -1073,8 +1073,8 @@ public class BlockDefinition {
                     public void onRightClick(Vector3d pos) {
                         if (getBlock((int)pos.x, (int)pos.y + 1, (int)pos.z) == 23) {
                             byte rot = getBlockRotation((int)pos.x, (int)pos.y, (int)pos.z);
-                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, 21,rot);
-                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, 22,rot);
+                            setBlock((int)pos.x, (int)pos.y + 1, (int)pos.z, (byte) 21,rot);
+                            setBlock((int)pos.x, (int)pos.y, (int)pos.z, (byte) 22,rot);
                         }
                     }
                 },
@@ -1088,7 +1088,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                25,
+                (byte) 25,
                 0,
                 0,
                 3,
@@ -1116,7 +1116,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                26,
+                (byte) 26,
                 0,
                 0,
                 0,
@@ -1144,7 +1144,7 @@ public class BlockDefinition {
         );
 
         new BlockDefinition(
-                27,
+                (byte) 27,
                 0,
                 0,
                 2,
@@ -1179,7 +1179,7 @@ public class BlockDefinition {
         };
 
         new BlockDefinition(
-                28,
+                (byte) 28,
                 0,
                 0,
                 2,
@@ -1214,7 +1214,7 @@ public class BlockDefinition {
         };
 
         new BlockDefinition(
-                29,
+                (byte) 29,
                 0,
                 0,
                 0,
