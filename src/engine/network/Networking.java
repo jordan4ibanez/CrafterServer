@@ -68,6 +68,7 @@ public class Networking {
         kryo.register(NetworkInventory.class,110);
         kryo.register(ThrowItemUpdate.class, 111);
         kryo.register(ChatMessage.class,112);
+        kryo.register(TimeSend.class,113);
 
         server.start();
 
@@ -164,6 +165,10 @@ public class Networking {
                 removePlayer(connection.getID());
             }
         });
+    }
+
+    public static void sendPlayerTime(int ID, double time){
+        server.sendToTCP(ID, new TimeSend(time));
     }
 
     public static void sendPlayerChatMessage(int ID, String message){

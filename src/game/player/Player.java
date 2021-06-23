@@ -18,6 +18,7 @@ import static engine.FancyMath.getDistance;
 import static engine.time.Time.getDelta;
 import static engine.disk.Disk.loadPlayerPos;
 import static engine.network.Networking.*;
+import static engine.time.TimeOfDay.getTimeOfDay;
 import static game.chunk.Chunk.*;
 import static game.item.ItemEntity.getAllItemEntities;
 
@@ -194,6 +195,9 @@ public class Player {
 
                 //send players items within their item render distance
                 sendThisPlayerItemEntities(thisPlayer);
+
+                //send player the updated time
+                sendPlayerTime(thisPlayer.ID, getTimeOfDay());
 
             }
 

@@ -179,13 +179,13 @@ public class TimeOfDay {
             }
             oldStageLight = dayStageLight[currentDayStage];
 
-            System.out.println("current stage: " + currentDayStage);
+            //System.out.println("current stage: " + currentDayStage);
             //loop around to next day
         } else if (currentDayStage == maxStage && linearTime >= currentDayTimeGoal){
             currentDayStage = 0;
             currentDayTimeGoal = dayStageGoal[currentDayStage];
 
-            System.out.println("new day, stage: 0");
+            //System.out.println("new day, stage: 0");
             if (dayStageLight[currentDayStage] != oldStageLight){
                 setCurrentLightLevel(dayStageLight[currentDayStage]);
             }
