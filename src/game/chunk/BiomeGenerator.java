@@ -6,6 +6,7 @@ import org.joml.Vector3i;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static game.CrafterServer.gameShouldClose;
 import static game.chunk.Chunk.getChunk;
@@ -14,7 +15,7 @@ import static game.chunk.ChunkMath.posToIndex;
 
 public class BiomeGenerator implements Runnable{
 
-    private final static Deque<Vector2i> queue = new ArrayDeque<>();
+    private final static ConcurrentLinkedDeque<Vector2i> queue = new ConcurrentLinkedDeque<>();
     private final static int seed = 532_444_432;
     private final static FastNoise noise = new FastNoise();
 
