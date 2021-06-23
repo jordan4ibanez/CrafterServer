@@ -129,6 +129,7 @@ public class Player {
         for (Player thisPlayer : players.values()){
             if (thisPlayer.ID != playerID){
                 PlayerPosObject thisPlayerPosObject = new PlayerPosObject();
+                thisPlayerPosObject.ID = thisPlayer.ID;
                 thisPlayerPosObject.pos = thisPlayer.pos;
                 thisPlayerPosObject.cameraRot = new Vector3f(thisPlayer.camRot);
                 thisPlayerPosObject.name = thisPlayer.name;
